@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh Mục Văn Phòng Phẩm</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="products.css">
+</head>
+<body>
+<header class="navbar">
+    <div class="container nav-container">
+        <h1 class="logo">VPP <span>Store</span></h1>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Tìm kiếm sản phẩm...">
+            <button id="searchBtn">Tìm kiếm</button>
+        </div>
+    </div>
+</header>
+
+<main class="container main-container">
+    <section class="category-section">
+        <h2 class="title-category">Danh Mục Sản Phẩm</h2>
+        <div class="category-tags" id="categoryTags">
+            <button class="filter-btn active" data-category="all">Tất cả</button>
+            <button class="filter-btn" data-category="paper">Giấy in</button>
+            <button class="filter-btn" data-category="notebook">Tập vở - sổ tay</button>
+            <button class="filter-btn" data-category="pen">Dụng cụ viết</button>
+            <button class="filter-btn" data-category="file">File & Lưu trữ</button>
+        </div>
+    </section>
+
+    <section class="product-section">
+        <div class="product-grid" id="productGrid"></div>
+        <p id="noResults" class="no-results hidden">Không tìm thấy sản phẩm phù hợp.</p>
+    </section>
+</main>
+
+<div class="modal-overlay hidden" id="productModal">
+    <div class="modal-content">
+        <button class="close-btn" id="closeModal">×</button>
+        <div class="modal-body" id="modalBody"></div>
+    </div>
+</div>
+
+<script src="products.js"></script>
+</body>
+</html>
