@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - VPSTORE</title>
+    <link rel="stylesheet" href="css_for3/style.css">
+</head>
+<body class="auth-page">
+
+<div class="auth-container">
+
+    <div class="auth-info">
+        <a href="index.html" class="logo">VHD<span>STORE</span></a>
+        <h1>Chào mừng trở lại!</h1>
+        <p>
+            Đăng nhập để tiếp tục khám phá những sản phẩm
+            văn phòng phẩm chất lượng tại VPSTORE.
+        </p>
+        <div class="auth-illustration">📚 ✏️ 🖊️</div>
+    </div>
+
+    <div class="auth-form">
+
+        <a href="index.html" class="back-home">← Trang chủ</a>
+
+        <h2>Đăng nhập</h2>
+        <p class="form-desc">Nhập thông tin tài khoản của bạn.</p>
+
+        <form id="loginForm">
+
+            <label>Email</label>
+            <input type="email" id="loginEmail"
+                   placeholder="Nhập email" required>
+
+            <label>Mật khẩu</label>
+            <input type="password" id="loginPassword"
+                   placeholder="Nhập mật khẩu" required>
+
+            <div class="form-check">
+                <input type="checkbox" id="remember">
+                <label for="remember">Ghi nhớ đăng nhập</label>
+            </div>
+
+            <button type="submit" class="btn-submit">
+                Đăng nhập
+            </button>
+
+        </form>
+
+        <p class="switch-auth">
+            Chưa có tài khoản?
+            <a href="register.html">Đăng ký ngay</a>
+        </p>
+
+    </div>
+</div>
+
+<script src="js/auth.js"></script>
+</body>
+</html>
