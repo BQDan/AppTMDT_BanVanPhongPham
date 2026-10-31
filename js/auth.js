@@ -1,10 +1,7 @@
-
-// Lấy danh sách tài khoản đã đăng ký
 function getUsers() {
     return JSON.parse(localStorage.getItem("users")) || [];
 }
 
-// ĐĂNG KÝ
 const registerForm = document.getElementById("registerForm");
 
 if (registerForm) {
@@ -53,7 +50,6 @@ if (registerForm) {
     });
 }
 
-// ĐĂNG NHẬP
 const loginForm = document.getElementById("loginForm");
 
 if (loginForm) {
@@ -92,7 +88,6 @@ if (loginForm) {
     });
 }
 
-// KIỂM TRA TRẠNG THÁI ĐĂNG NHẬP
 function getCurrentUser() {
     const localUser = localStorage.getItem("currentUser");
     const sessionUser = sessionStorage.getItem("currentUser");
@@ -100,7 +95,6 @@ function getCurrentUser() {
     return JSON.parse(localUser || sessionUser || "null");
 }
 
-// ĐĂNG XUẤT
 function logout() {
     localStorage.removeItem("currentUser");
     sessionStorage.removeItem("currentUser");
