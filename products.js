@@ -43,6 +43,16 @@ const closeModal = document.getElementById("closeModal");
 const modalBody = document.getElementById("modalBody");
 
 let currentCategory = "all";
+function removeAccents(str) {
+    if (!str) return "";
+    return str
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/đ/g, "d")
+        .replace(/Đ/g, "d")
+        .trim();
+}
 
 function renderProducts(items) {
     if (!productGrid) return;
@@ -70,12 +80,21 @@ function renderProducts(items) {
 }
 
 function filterProducts() {
-    const searchItem = searchInput ? searchInput.value.toLowerCase().trim() : "";
+    const rawInput = searchInput ? searchInput.value : "";
+    const cleanInput = removeAccents(rawInput);
+
     const filtered = products.filter((product) => {
         const matchCategory = currentCategory === "all" || product.category === currentCategory;
-        const matchSearch = product.name.toLowerCase().includes(searchItem);
-        return matchCategory && matchSearch;
+        if (!matchCategory) return false;
+
+        if (!cleanInput) return true;
+
+        const nameNoAccent = removeAccents(product.name);
+        const descNoAccent = removeAccents(product.description);
+
+        return nameNoAccent.includes(cleanInput) || descNoAccent.includes(cleanInput);
     });
+
     renderProducts(filtered);
 }
 
@@ -120,4 +139,4 @@ if (modal) {
     });
 }
 
-renderProducts(products);renderProducts(products);
+renderProducts(products);
