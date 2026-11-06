@@ -36,6 +36,14 @@ const productsData = [
     }
 ];
 
+const categoriesList = [
+    { id: 'all', name: 'Tất cả sản phẩm', icon: '📂' },
+    { id: 'paper', name: 'Giấy in - Giấy photo', icon: '📄' },
+    { id: 'notebook', name: 'Tập vở - Sổ tay', icon: '🎒' },
+    { id: 'pen', name: 'Dụng cụ viết', icon: '✏️' },
+    { id: 'file', name: 'File & Lưu trữ', icon: '📁' }
+];
+
 function removeAccents(str) {
     if (!str) return "";
     return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").trim();
@@ -120,6 +128,69 @@ export default function App() {
                     </div>
                 </div>
             </header>
+
+            {/* --- BẮT ĐẦU COMMIT 2: NAVIGATION MENU & HERO BANNER --- */}
+            {/* Navigation Menu */}
+            <nav className="nav-bar">
+                <div className="container nav-items">
+                    {categoriesList.map(cat => (
+                        <button
+                            key={cat.id}
+                            className={`nav-link ${currentCategory === cat.id ? 'active' : ''}`}
+                            onClick={() => setCurrentCategory(cat.id)}
+                        >
+                            {cat.icon} {cat.name.toUpperCase()}
+                        </button>
+                    ))}
+                </div>
+            </nav>
+
+            {/* Hero Banner */}
+            <section className="hero-banner">
+                <div className="container banner-container">
+                    <div className="banner-left">
+                        <div className="brand-circle">
+                            <span className="vhd-text">VHD</span>
+                            <span className="store-text">STORE</span>
+                        </div>
+                        <h1 className="banner-title">
+                            TỰ TIN HỌC TỐT<br />
+                            CÙNG <span>VHD STORE</span>
+                        </h1>
+                        <div className="badges-list">
+                            <div className="badge-item">
+                                <span className="badge-icon">🛡️</span>
+                                <div>
+                                    <strong>CHÍNH HÃNG</strong>
+                                    <p>100%</p>
+                                </div>
+                            </div>
+                            <div className="badge-item">
+                                <span className="badge-icon">🚚</span>
+                                <div>
+                                    <strong>GIAO HÀNG</strong>
+                                    <p>TOÀN QUỐC</p>
+                                </div>
+                            </div>
+                            <div className="badge-item">
+                                <span className="badge-icon">🎧</span>
+                                <div>
+                                    <strong>HỖ TRỢ</strong>
+                                    <p>TẬN TÂM</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="banner-right">
+                        <img
+                            src="https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?q=80&w=800&auto=format&fit=crop"
+                            alt="Văn phòng phẩm"
+                            className="banner-img"
+                        />
+                    </div>
+                </div>
+            </section>
+            {/* --- KẾT THÚC COMMIT 2 --- */}
 
             <main className="container main-container">
                 <section className="category-section">
