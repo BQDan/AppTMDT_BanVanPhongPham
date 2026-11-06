@@ -57,17 +57,66 @@ export default function App() {
 
     return (
         <div>
-            <header className="navbar">
-                <div className="container nav-container">
-                    <h1 className="logo">VPP <span>Store</span></h1>
-                    <div className="search-box">
+            {/* Top Bar */}
+            <div className="top-bar">
+                <div className="container top-bar-container">
+                    <div className="top-left">
+                        <span>Chào mừng bạn đến Website của VHD Store!</span>
+                        <span className="sep">|</span>
+                        <span>Email: <a href="mailto:dvkhatvhdstore.com.vn">dvkhatvhdstore.com.vn</a></span>
+                    </div>
+                    <div className="top-right">
+                        <a href="#login">Đăng nhập</a>
+                        <a href="#register">Đăng ký</a>
+                        <a href="#contact">Liên hệ</a>
+                    </div>
+                </div>
+            </div>
+
+            {/* Header */}
+            <header className="main-header">
+                <div className="container header-container">
+                    <div className="logo-box">
+                        <div className="logo-badge">VHD</div>
+                        <span className="logo-text">STORE</span>
+                    </div>
+
+                    <div className="header-search">
+                        <select
+                            className="cat-select"
+                            value={currentCategory}
+                            onChange={(e) => setCurrentCategory(e.target.value)}
+                        >
+                            <option value="all">Tất cả danh mục</option>
+                            <option value="paper">Giấy in</option>
+                            <option value="notebook">Tập vở - Sổ tay</option>
+                            <option value="pen">Dụng cụ viết</option>
+                            <option value="file">File & Lưu trữ</option>
+                        </select>
                         <input
                             type="text"
-                            placeholder="Tìm kiếm sản phẩm..."
+                            placeholder="Tìm kiếm sản phẩm văn phòng phẩm..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
-                        <button>Tìm kiếm</button>
+                        <button className="btn-search">🔍</button>
+                    </div>
+
+                    <div className="header-actions">
+                        <div className="action-item hotline">
+                            <span className="action-icon phone">📞</span>
+                            <div className="action-info">
+                                <span className="label">Gọi đặt hàng</span>
+                                <span className="value">024.2246.2003</span>
+                            </div>
+                        </div>
+                        <div className="action-item cart">
+                            <span className="action-icon shopping-cart">🛒</span>
+                            <div className="action-info">
+                                <span className="label">Giỏ hàng</span>
+                                <span className="value-cart">(0) sản phẩm</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </header>
