@@ -7,7 +7,9 @@ const productsData = [
         name: "Giấy In A4 Double A 70gsm",
         category: "paper",
         price: "85.000 đ",
+        oldPrice: "95.000 đ",
         image: "https://via.placeholder.com/200?text=Giay+A4",
+        status: "Còn hàng",
         description: "Giấy in cao cấp Double A định lượng 70gsm, độ trắng sáng chuẩn, bề mặt láng mịn giúp in không bị kẹt giấy."
     },
     {
@@ -15,7 +17,9 @@ const productsData = [
         name: "Bút Bi Gel Deli 0.5mm Mực Xanh",
         category: "pen",
         price: "12.000 đ",
+        oldPrice: "15.000 đ",
         image: "https://via.placeholder.com/200?text=But+Bi+Deli",
+        status: "Còn hàng",
         description: "Bút bi gel mực xanh nét mượt 0.5mm, thiết kế đệm cao su êm ái chống mỏi tay khi viết lâu."
     },
     {
@@ -23,7 +27,9 @@ const productsData = [
         name: "Sổ Tay Lò Cố A5 200 Trang",
         category: "notebook",
         price: "35.000 đ",
+        oldPrice: "40.000 đ",
         image: "https://via.placeholder.com/200?text=So+Tay+A5",
+        status: "Còn hàng",
         description: "Sổ tay bìa cứng cao cấp chống gập gãy, giấy kẻ ngang chống lóa mắt, lò xo thép chắc chắn."
     },
     {
@@ -31,7 +37,9 @@ const productsData = [
         name: "File Hộp Vuông 15cm Deli W38118",
         category: "file",
         price: "88.200 đ",
+        oldPrice: "98.000 đ",
         image: "https://via.placeholder.com/200?text=File+Luu+Tru",
+        status: "Còn hàng",
         description: "File hộp nhựa khóa cài chắc chắn, sức chứa lớn chuyên dùng bảo quản tài liệu, chứng từ văn phòng."
     }
 ];
@@ -64,8 +72,7 @@ export default function App() {
     });
 
     return (
-        <div>
-            {/* Top Bar */}
+        <div className="vhd-store-app">
             <div className="top-bar">
                 <div className="container top-bar-container">
                     <div className="top-left">
@@ -81,7 +88,6 @@ export default function App() {
                 </div>
             </div>
 
-            {/* Header */}
             <header className="main-header">
                 <div className="container header-container">
                     <div className="logo-box">
@@ -129,8 +135,6 @@ export default function App() {
                 </div>
             </header>
 
-            {/* --- BẮT ĐẦU COMMIT 2: NAVIGATION MENU & HERO BANNER --- */}
-            {/* Navigation Menu */}
             <nav className="nav-bar">
                 <div className="container nav-items">
                     {categoriesList.map(cat => (
@@ -145,7 +149,6 @@ export default function App() {
                 </div>
             </nav>
 
-            {/* Hero Banner */}
             <section className="hero-banner">
                 <div className="container banner-container">
                     <div className="banner-left">
@@ -190,50 +193,62 @@ export default function App() {
                     </div>
                 </div>
             </section>
-            {/* --- KẾT THÚC COMMIT 2 --- */}
 
-            <main className="container main-container">
-                <section className="category-section">
-                    <h2 className="title-category">Danh Mục Sản Phẩm</h2>
-                    <div className="category-tags">
-                        {[
-                            { id: 'all', name: 'Tất cả' },
-                            { id: 'paper', name: 'Giấy in' },
-                            { id: 'notebook', name: 'Tập vở - sổ tay' },
-                            { id: 'pen', name: 'Dụng cụ viết' },
-                            { id: 'file', name: 'File & Lưu trữ' }
-                        ].map(cat => (
-                            <button
-                                key={cat.id}
-                                className={`filter-btn ${currentCategory === cat.id ? 'active' : ''}`}
-                                onClick={() => setCurrentCategory(cat.id)}
-                            >
-                                {cat.name}
-                            </button>
-                        ))}
-                    </div>
-                </section>
+            <main className="container main-content">
+                <div className="content-layout">
+                    <aside className="sidebar">
+                        <h3 className="sidebar-title">DANH MỤC SẢN PHẨM</h3>
+                        <ul className="category-list">
+                            {categoriesList.map(cat => (
+                                <li
+                                    key={cat.id}
+                                    className={`category-item ${currentCategory === cat.id ? 'active' : ''}`}
+                                    onClick={() => setCurrentCategory(cat.id)}
+                                >
+                                    <span>{cat.icon} {cat.name}</span>
+                                    <span className="arrow">›</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </aside>
 
-                <section className="product-section">
-                    <div className="product-grid">
-                        {filteredProducts.map(product => (
-                            <div key={product.id} className="product-card">
-                                <img src={product.image} alt={product.name} className="product-img" />
-                                <div>
-                                    <h3 className="product-title">{product.name}</h3>
-                                    <p className="product-price">{product.price}</p>
+                    <section className="product-section">
+                        <div className="section-header">
+                            <h2 className="section-title">DANH SÁCH SẢN PHẨM</h2>
+                            {searchTerm && (
+                                <p className="search-status">
+                                    Kết quả tìm kiếm cho: "<strong>{searchTerm}</strong>" ({filteredProducts.length} sản phẩm)
+                                </p>
+                            )}
+                        </div>
+
+                        <div className="product-grid">
+                            {filteredProducts.map(product => (
+                                <div key={product.id} className="product-card">
+                                    <div className="card-image-box">
+                                        <img src={product.image} alt={product.name} className="product-img" />
+                                    </div>
+                                    <div className="product-details">
+                                        <h3 className="product-title" title={product.name}>{product.name}</h3>
+                                        <div className="price-box">
+                                            <span className="product-price">{product.price}</span>
+                                            {product.oldPrice && <span className="old-price">{product.oldPrice}</span>}
+                                        </div>
+                                    </div>
+                                    <button className="btn-detail" onClick={() => setSelectedProduct(product)}>
+                                        Xem Chi Tiết
+                                    </button>
                                 </div>
-                                <button className="btn-detail" onClick={() => setSelectedProduct(product)}>
-                                    Xem Chi Tiết
-                                </button>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
 
-                    {filteredProducts.length === 0 && (
-                        <p className="no-results">Không tìm thấy sản phẩm phù hợp.</p>
-                    )}
-                </section>
+                        {filteredProducts.length === 0 && (
+                            <div className="no-results">
+                                <p>⚠️ Không tìm thấy sản phẩm phù hợp.</p>
+                            </div>
+                        )}
+                    </section>
+                </div>
             </main>
 
             {selectedProduct && (
@@ -241,14 +256,24 @@ export default function App() {
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                         <button className="close-btn" onClick={() => setSelectedProduct(null)}>×</button>
                         <div className="modal-body">
-                            <img src={selectedProduct.image} alt={selectedProduct.name} className="modal-img" />
+                            <div className="modal-img-box">
+                                <img src={selectedProduct.image} alt={selectedProduct.name} className="modal-img" />
+                            </div>
                             <div className="modal-info">
-                                <h2>{selectedProduct.name}</h2>
-                                <p className="price">{selectedProduct.price}</p>
-                                <p className="desc">{selectedProduct.description}</p>
-                                <button className="btn-detail" onClick={() => alert('Đã thêm sản phẩm vào giỏ hàng!')}>
-                                    Thêm Vào Giỏ Hàng
-                                </button>
+                                <h2 className="modal-title">{selectedProduct.name}</h2>
+                                <p className="modal-status">Trạng thái: <span className="status-badge">{selectedProduct.status || 'Còn hàng'}</span></p>
+                                <div className="modal-price-box">
+                                    <span className="price">{selectedProduct.price}</span>
+                                </div>
+                                <div className="modal-desc-box">
+                                    <h4>Mô tả sản phẩm:</h4>
+                                    <p className="desc">{selectedProduct.description}</p>
+                                </div>
+                                <div className="modal-actions">
+                                    <button className="btn-add-cart" onClick={() => alert(`Đã thêm "${selectedProduct.name}" vào giỏ hàng!`)}>
+                                        🛒 Thêm Vào Giỏ Hàng
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
