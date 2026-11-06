@@ -1,5 +1,6 @@
+import { Link } from "react-router-dom";
 
-function TopBar() {
+export function TopBar() {
     return (
         <div className="topbar">
             <div className="site-container topbar-inner">
@@ -8,9 +9,12 @@ function TopBar() {
                 </p>
 
                 <div className="topbar-links">
-                    <a href="/login">Đăng nhập</a>
-                    <a href="/register">Đăng ký</a>
-                    <a href="#contact">Liên hệ</a>
+                    <Link to='/login' className='login-link'>
+                    Đăng nhập
+                    </Link>
+                    <Link to='/register' className='register-link'>
+                    Đăng ký
+                    </Link>
                 </div>
             </div>
         </div>
