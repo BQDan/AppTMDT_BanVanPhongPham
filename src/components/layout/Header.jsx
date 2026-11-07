@@ -1,15 +1,18 @@
-
+import { Link } from "react-router-dom";
+import { useCart } from "../../hooks/useCart";
 function Header() {
+    const { count } = useCart();
+
     return (
         <header className="site-header">
             <div className="site-container header-inner">
 
-                <a className="brand" href="/">
+                <Link className="brand" to="/">
                     <img
                         src="/images/logo/vhd-logo.png"
                         alt="VHD Store"
                     />
-                </a>
+                </Link>
 
                 <form
                     className="search"
@@ -33,13 +36,15 @@ function Header() {
                     </div>
                 </a>
 
-                <a className="header-cart" href="/cart">
-                    <span className="header-icon">🛒</span>
+                <Link className="header-cart" to="/cart">
+                    <span className="header-icon">
+                        🛒
+                        {count > 0 && <span className='cart-badge'>{count > 99 ? '99+' : count}</span>}</span>
                     <div>
                         <strong>Giỏ hàng</strong>
-                        <small>Kiểm tra đơn hàng</small>
+                        <small>{count > 0 ? `${count} sản phẩm` : 'Kiểm tra đơn hàng'}</small>
                     </div>
-                </a>
+                </Link>
 
             </div>
         </header>
