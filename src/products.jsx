@@ -1,49 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './products.css';
 
-const productsData = [
-    {
-        id: 1,
-        name: "Giấy In A4 Double A 70gsm",
-        category: "paper",
-        price: "85.000 đ",
-        oldPrice: "95.000 đ",
-        image: "https://via.placeholder.com/200?text=Giay+A4",
-        status: "Còn hàng",
-        description: "Giấy in cao cấp Double A định lượng 70gsm, độ trắng sáng chuẩn, bề mặt láng mịn giúp in không bị kẹt giấy."
-    },
-    {
-        id: 2,
-        name: "Bút Bi Gel Deli 0.5mm Mực Xanh",
-        category: "pen",
-        price: "12.000 đ",
-        oldPrice: "15.000 đ",
-        image: "https://via.placeholder.com/200?text=But+Bi+Deli",
-        status: "Còn hàng",
-        description: "Bút bi gel mực xanh nét mượt 0.5mm, thiết kế đệm cao su êm ái chống mỏi tay khi viết lâu."
-    },
-    {
-        id: 3,
-        name: "Sổ Tay Lò Cố A5 200 Trang",
-        category: "notebook",
-        price: "35.000 đ",
-        oldPrice: "40.000 đ",
-        image: "https://via.placeholder.com/200?text=So+Tay+A5",
-        status: "Còn hàng",
-        description: "Sổ tay bìa cứng cao cấp chống gập gãy, giấy kẻ ngang chống lóa mắt, lò xo thép chắc chắn."
-    },
-    {
-        id: 4,
-        name: "File Hộp Vuông 15cm Deli W38118",
-        category: "file",
-        price: "88.200 đ",
-        oldPrice: "98.000 đ",
-        image: "https://via.placeholder.com/200?text=File+Luu+Tru",
-        status: "Còn hàng",
-        description: "File hộp nhựa khóa cài chắc chắn, sức chứa lớn chuyên dùng bảo quản tài liệu, chứng từ văn phòng."
-    }
-];
-
+// 1. Khai báo danh sách danh mục để làm sidebar/menu
 const categoriesList = [
     { id: 'all', name: 'Tất cả sản phẩm', icon: '📂' },
     { id: 'paper', name: 'Giấy in - Giấy photo', icon: '📄' },
@@ -52,27 +10,30 @@ const categoriesList = [
     { id: 'file', name: 'File & Lưu trữ', icon: '📁' }
 ];
 
-function removeAccents(str) {
-    if (!str) return "";
-    return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").trim();
-}
-
 export default function App() {
-    const [searchTerm, setSearchTerm] = useState("");
-    const [currentCategory, setCurrentCategory] = useState("all");
-    const [selectedProduct, setSelectedProduct] = useState(null);
+    // Task 1: Khai báo State và lấy dữ liệu từ API public/products.json
+    const [productsData, setProductsData] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const filteredProducts = productsData.filter((product) => {
-        const matchCategory = currentCategory === "all" || product.category === currentCategory;
-        const cleanSearch = removeAccents(searchTerm);
-        const nameNoAccent = removeAccents(product.name);
-        const descNoAccent = removeAccents(product.description);
-
-        return matchCategory && (nameNoAccent.includes(cleanSearch) || descNoAccent.includes(cleanSearch));
-    });
+    useEffect(() => {
+        fetch('/products.json')
+            .then(res => {
+                if (!res.ok) throw new Error('Lỗi khi nạp dữ liệu từ API');
+                return res.json();
+            })
+            .then(data => {
+                setProductsData(data);
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error("Lỗi Fetch API:", err);
+                setLoading(false);
+            });
+    }, []);
 
     return (
         <div className="vhd-store-app">
+            {/* Top Bar */}
             <div className="top-bar">
                 <div className="container top-bar-container">
                     <div className="top-left">
@@ -88,6 +49,7 @@ export default function App() {
                 </div>
             </div>
 
+            {/* Header */}
             <header className="main-header">
                 <div className="container header-container">
                     <div className="logo-box">
@@ -96,11 +58,7 @@ export default function App() {
                     </div>
 
                     <div className="header-search">
-                        <select
-                            className="cat-select"
-                            value={currentCategory}
-                            onChange={(e) => setCurrentCategory(e.target.value)}
-                        >
+                        <select className="cat-select">
                             <option value="all">Tất cả danh mục</option>
                             <option value="paper">Giấy in</option>
                             <option value="notebook">Tập vở - Sổ tay</option>
@@ -110,8 +68,6 @@ export default function App() {
                         <input
                             type="text"
                             placeholder="Tìm kiếm sản phẩm văn phòng phẩm..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
                         />
                         <button className="btn-search">🔍</button>
                     </div>
@@ -135,20 +91,18 @@ export default function App() {
                 </div>
             </header>
 
+            {/* Navigation Bar */}
             <nav className="nav-bar">
                 <div className="container nav-items">
                     {categoriesList.map(cat => (
-                        <button
-                            key={cat.id}
-                            className={`nav-link ${currentCategory === cat.id ? 'active' : ''}`}
-                            onClick={() => setCurrentCategory(cat.id)}
-                        >
+                        <button key={cat.id} className="nav-link">
                             {cat.icon} {cat.name.toUpperCase()}
                         </button>
                     ))}
                 </div>
             </nav>
 
+            {/* Hero Banner */}
             <section className="hero-banner">
                 <div className="container banner-container">
                     <div className="banner-left">
@@ -160,29 +114,6 @@ export default function App() {
                             TỰ TIN HỌC TỐT<br />
                             CÙNG <span>VHD STORE</span>
                         </h1>
-                        <div className="badges-list">
-                            <div className="badge-item">
-                                <span className="badge-icon">🛡️</span>
-                                <div>
-                                    <strong>CHÍNH HÃNG</strong>
-                                    <p>100%</p>
-                                </div>
-                            </div>
-                            <div className="badge-item">
-                                <span className="badge-icon">🚚</span>
-                                <div>
-                                    <strong>GIAO HÀNG</strong>
-                                    <p>TOÀN QUỐC</p>
-                                </div>
-                            </div>
-                            <div className="badge-item">
-                                <span className="badge-icon">🎧</span>
-                                <div>
-                                    <strong>HỖ TRỢ</strong>
-                                    <p>TẬN TÂM</p>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <div className="banner-right">
                         <img
@@ -194,17 +125,15 @@ export default function App() {
                 </div>
             </section>
 
+            {/* Bố cục chính */}
             <main className="container main-content">
                 <div className="content-layout">
+                    {/* Sidebar danh mục bên trái */}
                     <aside className="sidebar">
                         <h3 className="sidebar-title">DANH MỤC SẢN PHẨM</h3>
                         <ul className="category-list">
                             {categoriesList.map(cat => (
-                                <li
-                                    key={cat.id}
-                                    className={`category-item ${currentCategory === cat.id ? 'active' : ''}`}
-                                    onClick={() => setCurrentCategory(cat.id)}
-                                >
+                                <li key={cat.id} className="category-item">
                                     <span>{cat.icon} {cat.name}</span>
                                     <span className="arrow">›</span>
                                 </li>
@@ -212,73 +141,43 @@ export default function App() {
                         </ul>
                     </aside>
 
+                    {/* Khu vực hiển thị sản phẩm */}
                     <section className="product-section">
                         <div className="section-header">
-                            <h2 className="section-title">DANH SÁCH SẢN PHẨM</h2>
-                            {searchTerm && (
-                                <p className="search-status">
-                                    Kết quả tìm kiếm cho: "<strong>{searchTerm}</strong>" ({filteredProducts.length} sản phẩm)
-                                </p>
-                            )}
+                            <h2 className="section-title">DANH SÁCH SẢN PHẨM ({productsData.length})</h2>
                         </div>
 
-                        <div className="product-grid">
-                            {filteredProducts.map(product => (
-                                <div key={product.id} className="product-card">
-                                    <div className="card-image-box">
-                                        <img src={product.image} alt={product.name} className="product-img" />
-                                    </div>
-                                    <div className="product-details">
-                                        <h3 className="product-title" title={product.name}>{product.name}</h3>
-                                        <div className="price-box">
-                                            <span className="product-price">{product.price}</span>
-                                            {product.oldPrice && <span className="old-price">{product.oldPrice}</span>}
-                                        </div>
-                                    </div>
-                                    <button className="btn-detail" onClick={() => setSelectedProduct(product)}>
-                                        Xem Chi Tiết
-                                    </button>
-                                </div>
-                            ))}
-                        </div>
-
-                        {filteredProducts.length === 0 && (
+                        {/* ĐÂY LÀ VỊ TRÍ ĐƯA ĐOẠN CODE VÀO */}
+                        {loading ? (
                             <div className="no-results">
-                                <p>⚠️ Không tìm thấy sản phẩm phù hợp.</p>
+                                <p>⏳ Đang tải dữ liệu sản phẩm...</p>
+                            </div>
+                        ) : (
+                            <div className="product-grid">
+                                {productsData.map(product => (
+                                    <div key={product.id} className="product-card">
+                                        <div className="card-image-box">
+                                            <img src={product.image} alt={product.name} className="product-img" />
+                                            <span className="badge-stock">{product.status}</span>
+                                        </div>
+                                        <div className="product-details">
+                                            <h3 className="product-title">{product.name}</h3>
+                                            <p className="product-desc">{product.description}</p>
+                                            <div className="price-box">
+                                                <span className="product-price">{product.price}</span>
+                                                {product.oldPrice && (
+                                                    <span className="product-old-price">{product.oldPrice}</span>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <button className="btn-detail">Xem Chi Tiết</button>
+                                    </div>
+                                ))}
                             </div>
                         )}
                     </section>
                 </div>
             </main>
-
-            {selectedProduct && (
-                <div className="modal-overlay" onClick={() => setSelectedProduct(null)}>
-                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                        <button className="close-btn" onClick={() => setSelectedProduct(null)}>×</button>
-                        <div className="modal-body">
-                            <div className="modal-img-box">
-                                <img src={selectedProduct.image} alt={selectedProduct.name} className="modal-img" />
-                            </div>
-                            <div className="modal-info">
-                                <h2 className="modal-title">{selectedProduct.name}</h2>
-                                <p className="modal-status">Trạng thái: <span className="status-badge">{selectedProduct.status || 'Còn hàng'}</span></p>
-                                <div className="modal-price-box">
-                                    <span className="price">{selectedProduct.price}</span>
-                                </div>
-                                <div className="modal-desc-box">
-                                    <h4>Mô tả sản phẩm:</h4>
-                                    <p className="desc">{selectedProduct.description}</p>
-                                </div>
-                                <div className="modal-actions">
-                                    <button className="btn-add-cart" onClick={() => alert(`Đã thêm "${selectedProduct.name}" vào giỏ hàng!`)}>
-                                        🛒 Thêm Vào Giỏ Hàng
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
     );
 }
