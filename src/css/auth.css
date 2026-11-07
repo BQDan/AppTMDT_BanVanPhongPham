@@ -1,0 +1,107 @@
+.brand {
+    display: inline-block;
+    font-size: 25px;
+    font-weight: 750;
+    color: blueviolet;
+    letter-spacing: -1px;
+}
+
+.brand span{
+    color: #ff9d52;
+}
+
+.auth-page{
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 25px;
+    background: white;
+}
+
+.auth-card{
+    width: 100%;
+    max-width: 450px;
+    padding: 40px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 35px black;
+}
+
+.auth-card h1{
+    margin-top: 30px;
+    margin-bottom: 8px;
+    font-size: 30px;
+}
+
+.auth-card > p{
+    color: #76768a;
+    margin-bottom: 25px;
+}
+.auth-card form{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.auth-card label{
+    font-weight: 600;
+}
+
+.auth-card input{
+    width: 100%;
+    height: 45px;
+    padding: 0 12px;
+    border: 1px solid #d6e7f7;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+.auth-card form button{
+    height: 50px;
+    color: white;
+    background: #1769d2;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.auth-card form button:hover{
+    background: #044497;
+}
+
+.auth-card .auth-switch{
+    margin-top: 25px;
+    text-align: center;
+    font-size: 15px;
+}
+.auth-switch a {
+    color: #1769d2;
+    font-weight: bold;
+}
+
+.auth-card .pw-wrap{position: relative;}
+.auth-card .pw-wrap input{padding-right: 60px;}
+.auth-card .pw-toggle{
+    position: absolute;
+    right: 5px; top: 7px;
+    height: 33px;
+    padding: 0 10px;
+    background: white !important;
+    color: #1769d2 !important;
+    border-radius: 5px !important;
+    font-size: 13px;
+}
+.auth-card input.invalid{margin-bottom: 0;}
+.auth-card .field-error{margin-top: -5px;}
+.auth-card button:disabled{opacity: .6; cursor: wait;}
+.auth-demo{
+    margin-top: 15px; 
+    text-align: center;
+    font-size: 12px;
+    color: #76768a;
+}
+.strength{display: flex; gap: 5px; margin: -4px 0 2px;}
+.strength i{flex: 1; height: 5px; border-radius: 3px; background: #d6e7f7;}
+.strength i.on.s1{background: #e92735;}
+.strength i.on.s2{background: #ff9f1c;}
+.strength i.on.s3{background: #d6c11a;}
+.strength i.on.s4{background: #2ba84a;}
