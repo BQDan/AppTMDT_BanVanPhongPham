@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 
 const navItems = [
     "VĂN PHÒNG PHẨM",
@@ -14,9 +15,9 @@ function Navbar() {
         <nav className="main-nav">
             <div className="site-container nav-inner">
                 {navItems.map((item, index) => (
-                    <a href={`/products?category=${index}`} key={item}>
+                    <Link to={`/products?category=${index}`} key={item}>
                         {item}
-                    </a>
+                    </Link>
                 ))}
             </div>
         </nav>

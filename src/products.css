@@ -1,0 +1,363 @@
+:root {
+    --primary-blue: #0275d8;
+    --dark-blue: #0056b3;
+    --red-accent: #e50914;
+    --top-bar-bg: #87ceeb;
+    --nav-bg: #e9ecef;
+    --text-main: #333333;
+    --border-color: #e2e8f0;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f4f6f8;
+    color: var(--text-main);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.top-bar {
+    background-color: #61b3e5;
+    color: #333;
+    font-size: 13px;
+    padding: 6px 0;
+}
+
+.top-bar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.top-left {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.top-left a {
+    color: #333;
+    text-decoration: none;
+}
+
+.sep {
+    color: #888;
+}
+
+.top-right {
+    display: flex;
+    gap: 15px;
+}
+
+.top-right a {
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.main-header {
+    background: #ffffff;
+    padding: 15px 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.logo-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.logo-badge {
+    background: #0275d8;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #0056b3;
+}
+
+.logo-text {
+    font-weight: bold;
+    font-size: 20px;
+    color: #0275d8;
+}
+
+.header-search {
+    display: flex;
+    flex: 1;
+    max-width: 500px;
+    border: 2px solid #e50914;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.cat-select {
+    background: #f8f9fa;
+    border: none;
+    border-right: 1px solid #ccc;
+    padding: 8px 12px;
+    outline: none;
+    font-size: 13px;
+}
+
+.header-search input {
+    flex: 1;
+    border: none;
+    padding: 8px 12px;
+    outline: none;
+}
+
+.btn-search {
+    background: #e50914;
+    border: none;
+    color: white;
+    padding: 0 18px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.header-actions {
+    display: flex;
+    gap: 20px;
+}
+
+.action-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.action-icon {
+    font-size: 20px;
+    background: #e50914;
+    color: white;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-info {
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+}
+
+.action-info .label {
+    color: #666;
+}
+
+.action-info .value {
+    color: #e50914;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.action-info .value-cart {
+    color: #e50914;
+    font-size: 13px;
+}
+
+.nav-bar {
+    background: #e9ecef;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+
+.nav-items {
+    display: flex;
+    gap: 5px;
+    overflow-x: auto;
+}
+
+.nav-link {
+    background: none;
+    border: none;
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #444;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+}
+
+.nav-link:hover, .nav-link.active {
+    background: #ffffff;
+    color: #0275d8;
+}
+
+.hero-banner {
+    background: linear-gradient(135deg, #0288d1 0%, #01579b 100%);
+    color: white;
+    padding: 35px 0;
+    margin-bottom: 25px;
+}
+
+.banner-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.banner-left {
+    max-width: 50%;
+}
+
+.brand-circle {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    border: 3px solid white;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.vhd-text {
+    font-weight: 900;
+    font-size: 20px;
+}
+
+.store-text {
+    font-size: 9px;
+    letter-spacing: 1px;
+}
+
+.banner-title {
+    font-size: 32px;
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 20px;
+}
+
+.banner-title span {
+    color: #4fc3f7;
+}
+
+.banner-right {
+    max-width: 45%;
+}
+
+.banner-img {
+    width: 100%;
+    max-height: 240px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.main-content {
+    margin-bottom: 40px;
+}
+
+.content-layout {
+    display: flex;
+    gap: 25px;
+}
+
+.sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    height: fit-content;
+}
+
+.sidebar-title {
+    background: var(--primary-blue);
+    color: white;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.category-list {
+    list-style: none;
+}
+
+.category-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s;
+}
+
+.category-item:last-child {
+    border-bottom: none;
+}
+
+.category-item:hover, .category-item.active {
+    background: #f0f7ff;
+    color: var(--primary-blue);
+    font-weight: 600;
+}
+
+.category-item .arrow {
+    font-size: 16px;
+    color: #aaa;
+}
+
+.product-section {
+    flex: 1;
+}
+
+.section-header {
+    border-bottom: 2px solid var(--primary-blue);
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #01579b;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 20px;
+}
+
+.no-results {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+}
