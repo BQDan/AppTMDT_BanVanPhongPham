@@ -1,14 +1,20 @@
-<<<<<<< HEAD
+
+import { Routes, Route } from "react-router-dom";
+
 
 import TopBar from "./components/layout/TopBar";
 import Header from "./components/layout/Header";
 import Navbar from "./components/layout/Navbar";
-import "./components/layout/Layout.css";
-
 import HeroBanner from "./components/home/HeroBanner";
-import "./components/home/Home.css";
 
-function App() {
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+
+import "./components/layout/Layout.css";
+import "./components/home/Home.css";
+import "./Auth.css";
+
+function HomePage() {
     return (
         <>
             <TopBar />
@@ -25,8 +31,21 @@ function App() {
     );
 }
 
+ Dan
+function App() {
+    return (
+        <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+        </Routes>
+    );
+}
+
 export default App;
-=======
+
+export default App;
+
 import { useState } from 'react'
 import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
@@ -149,4 +168,3 @@ function App() {
 }
 
 export default App
->>>>>>> Vu
