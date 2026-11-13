@@ -13,7 +13,7 @@ export function useOrders()
 
     const orders = useMemo(() => {
         if(!user) return [];
-        const list = user.role === ROLES.ADMIN ? all : all.filter((od) => od.userId === user.id);
+        const list = all.filter((od) => od.userId === user.id);
         return [...list].sort((a, b) => b.createdAt - a.createdAt);
     }, [all, user]);
     
