@@ -15,7 +15,6 @@ export default function TopBar() {
                 <div className="topbar-links">
                     {user ? (
                         <>
-                            {user.role === ROLES.ADMIN && <Link to='/admin'>Quản trị viên</Link>}
                             <Link to='/account/orders'>Đơn hàng của tôi</Link>
                             <button type='button' className='link-btn' onClick={() => { logout(); navigate('/'); }}>
                                 Đăng xuất
