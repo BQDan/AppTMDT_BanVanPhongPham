@@ -8,7 +8,7 @@ export const PAYMENTS = {
 };
 export const ORDER_STATUS = {
     pending: 'Chờ xác nhận',
-    shipping: 'đang giao',,
+    shipping: 'đang giao',
     done: 'Hoàn thành đơn',
     cancelled: 'Đã huỷ'
 };

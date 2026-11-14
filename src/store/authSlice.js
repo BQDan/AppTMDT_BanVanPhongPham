@@ -9,7 +9,7 @@ function loadInit(){
     const sessionId = readJSON(KEYS.session, null);
     return {
         users: Array.isArray(users) ? users : [],
-        currentId; users.some((u) => u.id === sessionId ? sessionId : null)
+        currentId: users.some((u) => u.id === sessionId ? sessionId : null)
     };
 }
 

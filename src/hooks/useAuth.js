@@ -1,20 +1,20 @@
-import { useCallback, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { loginUser, registerUser, logout as logoutAction, currentUser} from "../store/authSlice";
+import { useCallback, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginUser, registerUser, loggedOut, selectCurrentUser} from '../store/authSlice';
 
 export function useAuth(){
     const dispatch = useDispatch();
-    const ready = useSelector(currentUser);
+    const account = useSelector(selectCurrentUser);
     
     const user = useMemo(() => {
-        if(!ready) return null;
-        const { password: _pw, ...rest } = ready;
+        if(!account) return null;
+        const { password: _pw, ...rest } = account;
         return rest;
-    }, [ready]);
+    }, [account]);
 
-    const login = useCallback((form) => dispatch(loginUser(form)).unwrap(), [dispatch]);
-    const register = useCallback((form) => dispatch(registerUser(form)).unwrap(), [dispatch]);
-    const logout = useCallback(() => dispatch(logoutAction()), [dispatch]);
+    const login = useCallback((form) => dispatch(loginUser(form)), [dispatch]);
+    const register = useCallback((form) => dispatch(registerUser(form)), [dispatch]);
+    const logout = useCallback(() => dispatch(loggedOut()), [dispatch]);
 
     return useMemo(() => ({
         user, isAuthenticated: !!user, login, register, logout,
