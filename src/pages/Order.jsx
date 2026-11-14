@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useOrders, ORDER_STATUS, PAYMENTS } from "../hooks/useOrders";
+import { ORDER_STATUS, PAYMENTS } from '../lib/constants';
 import { formatVND } from '../lib/format';
 import '../css/cart.css';
 

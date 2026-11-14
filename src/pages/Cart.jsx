@@ -7,12 +7,10 @@ import '../css/cart.css';
 
 export default function Cart()
 {
-    const {loaded, lines, subtotal, increase, decrease, setQty, removeItem, clearCart} = useCart();
+    const {lines, subtotal, increase, decrease, setQty, removeItem, clearCart} = useCart();
     const {isAuthenticated} = useAuth();
     const navigate = useNavigate();
     const shipping = shippingFor(subtotal);
-
-    if(!loaded) return <div className="page-loading">Đang tải...</div>
     
     if(!lines.length)
     {
