@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth, ROLES } from "../../hooks/useAuth";
 
 export default function TopBar() {
-    const {use, logout} = useAuth();
+    const {user, logout} = useAuth();
     const navigate = useNavigate();
 
     return (
@@ -37,4 +37,3 @@ export default function TopBar() {
         </div>
     );
 }
-export default TopBar;
