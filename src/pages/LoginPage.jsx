@@ -1,9 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-
+import { useAuth } from "../hooks/useAuth";
 function LoginPage() {
     const navigate = useNavigate();
-
+    const { login } = useAuth();
+    const [error, setError] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
@@ -15,8 +16,11 @@ function LoginPage() {
             return;
         }
 
-        alert("Đăng nhập thành công!");
-
+        const result = login({ email, password });
+        if (!result.ok) {
+            setError(result.errors);
+            return;
+        }
         navigate("/");
     };
 
@@ -62,6 +66,7 @@ function LoginPage() {
                         <a href="#forgot-password">Quên mật khẩu?</a>
                     </div>
 
+                    {error && <p className="auth-error">{error}</p>}
                     <button type="submit" className="auth-button">
                         ĐĂNG NHẬP
                     </button>

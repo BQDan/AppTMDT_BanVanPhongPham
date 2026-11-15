@@ -1,9 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useAuth } from "../hooks/useAuth";
 
 function RegisterPage() {
     const navigate = useNavigate();
+    const { register } = useAuth();
 
+    const [errors, setErrors] = useState({});
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
@@ -12,20 +15,28 @@ function RegisterPage() {
 
     const handleRegister = (event) => {
         event.preventDefault();
+        setErrors({});
 
-        if (!name || !email || !phone || !password || !confirmPassword) {
-            alert("Vui lòng nhập đầy đủ thông tin!");
+        // Số điện thoại VN: 10 chữ số, bắt đầu bằng 0
+        if (!/^0\d{9}$/.test(phone.trim())) {
+            setErrors({ phone: "Số điện thoại phải gồm 10 chữ số, bắt đầu bằng 0." });
             return;
         }
 
-        if (password !== confirmPassword) {
-            alert("Mật khẩu xác nhận không khớp!");
+        const result = register({
+            name,
+            email,
+            phone,
+            password,
+            confirm: confirmPassword,
+        });
+
+        if (!result.ok) {
+            setErrors(result.errors);
             return;
         }
 
-        alert("Đăng ký tài khoản thành công!");
-
-        navigate("/login");
+        navigate("/");
     };
 
     return (
@@ -50,6 +61,7 @@ function RegisterPage() {
                             value={name}
                             onChange={(event) => setName(event.target.value)}
                         />
+                        {errors.name && <small className="field-error">{errors.name}</small>}
                     </div>
 
                     <div className="form-group">
@@ -60,6 +72,7 @@ function RegisterPage() {
                             value={email}
                             onChange={(event) => setEmail(event.target.value)}
                         />
+                        {errors.email && <small className="field-error">{errors.email}</small>}
                     </div>
 
                     <div className="form-group">
@@ -70,6 +83,7 @@ function RegisterPage() {
                             value={phone}
                             onChange={(event) => setPhone(event.target.value)}
                         />
+                        {errors.phone && <small className="field-error">{errors.phone}</small>}
                     </div>
 
                     <div className="form-group">
@@ -80,6 +94,7 @@ function RegisterPage() {
                             value={password}
                             onChange={(event) => setPassword(event.target.value)}
                         />
+                        {errors.password && <small className="field-error">{errors.password}</small>}
                     </div>
 
                     <div className="form-group">
@@ -90,6 +105,7 @@ function RegisterPage() {
                             value={confirmPassword}
                             onChange={(event) => setConfirmPassword(event.target.value)}
                         />
+                        {errors.confirm && <small className="field-error">{errors.confirm}</small>}
                     </div>
 
                     <button type="submit" className="auth-button">

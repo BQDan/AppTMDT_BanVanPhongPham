@@ -11,15 +11,18 @@ export function useCart()
 {
     const dispatch = useDispatch();
     const items = useSelector((s) => s.cart.items);
-    const loaded = useSelector((s) => s.auth.ready && s.cart.loadedKey === (s.auth.user?.id || 'guest'));
 
     return useMemo(() => {
-        const lines = items.map((i) => {
+        const lines = (items || []).map((i) => {
             const product = getProduct(i.id);
-            return {...product, qty: i.qty, lineTotals: product.price * i.qty};
+
+            return {
+                ...product,
+                qty: i.qty,
+                lineTotals: product.price * i.qty
+            };
         });
         return {
-            loaded, 
             lines,
             count: lines.reduce((s, l) => s + l.qty, 0),
             subtotal: lines.reduce((s, l) => s + l.lineTotals, 0),
@@ -28,7 +31,7 @@ export function useCart()
             increase: (id) => dispatch(C.increase(id)),
             decrease: (id) => dispatch(C.decrease(id)),
             removeItem: (id) => dispatch(C.removeItem(id)),
-            clearCart: (id) => dispatch(C.clearCart(id)),
+            clearCart: () => dispatch(C.clearCart()),
         };
-    }, [items, loaded, dispatch]);
+    }, [items, dispatch]);
 }

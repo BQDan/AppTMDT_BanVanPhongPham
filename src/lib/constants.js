@@ -1,4 +1,4 @@
-export const ROLES = {ADMIN: 'admin', CUSTOMER: 'customer'};
+export const ROLES = {CUSTOMER: 'customer'};
 export const MAX_QTY = 99;
 export const FREE_SHIP_FROM = 150000;
 export const SHIP_FEE = 15000;

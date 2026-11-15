@@ -1,7 +1,32 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
+import '../css/auth.css';
 
 export function Login() 
 {
+    const { login } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [form, setForm] = useState({email: '', password:''});
+    const [error, setError] = useState('');
+    const [busy, setBusy] = useState(false);
+    const [showPW, setShowPW] = useState(false);
+
+    const onChange = (c) => setForm({...form, [e.target.name]: e.target.value});
+    const onSubmit = async (s) => {
+        s.preventDefault();
+        setError('');
+
+        setBusy(true);
+        const response = await login(form);
+        setBusy(false);
+        
+        if(!response.ok) return setError(response.error);
+        
+        navigate(location.state?.from || '/', {replace:true});
+    };
+
     return (
         <div className='auth-page'>
             <div className='auth-card'>
@@ -12,14 +37,29 @@ export function Login()
                 <h1>Đăng nhập</h1>
                 <p>Chào mừng bạn quay trở lại với VHD</p>
 
-                <form>
-                    <label>Email</label>
-                    <input type="email" placeholder='Nhập email...' required/>
+                {location.state?.from && (
+                    <div className='alert alert-info'>Vui lòng đăng nhập để tiếp tục.</div>
+                )}
+                {error && <div className='alert alert-error' role='alert'>{}error</div>}
 
-                    <label>Mật khẩu</label>
-                    <input type="password" placeholder='Nhập mật khẩu' required/>
+                <form onSubmit={onSubmit} noValidate>
+                    <label htmlFor='email'>Email</label>
+                    <input id='email' name='email' type="email" autoComplete='username' 
+                    placeholder='Nhập email...' value={form.email} onChange={onChange} required/>
 
-                    <button type='submit'>Đăng nhập</button>
+                    <label htmlFor='password'>Mật khẩu</label>
+                    <div className='pw-wrap'>
+                        <input id='password' name='password' type={showPW?'text':'password'}
+                        autoComplete='current-password' placeholder='Nhập mật khẩu'
+                        value={form.password} onChange={onChange} required/>
+
+                        <button type='button' className='pw-toggle' onClick={() => setShowPW(!showPW)}>
+                            {showPW ? 'Ẩn' : 'Hiện'}
+                        </button>
+                    </div>
+                        
+
+                    <button type='submit' disabled={busy}>{busy ? 'Đang xử lý...' : 'Đăng nhập'}</button>
                 </form>
                 
                 <p className='auth-switch'>
