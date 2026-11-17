@@ -7,12 +7,14 @@ import './Layout.css';
 export default function MainLayout()
 {
     return (
-        <TopBar />
-        <Header />
-        <Navbar />
-        <main className='site-container main-page'>
-            <Outlet />
-        </main>
-        <footer className='home-footer'>© 2026 VHDSTORE. All rights reserved.</footer>
+        <>
+            <TopBar />
+            <Header />
+            <Navbar />
+            <main className='site-container main-page'>
+                <Outlet />
+            </main>
+            <footer className='home-footer'>© 2026 VHDSTORE. All rights reserved.</footer>
+        </>
     )
 }

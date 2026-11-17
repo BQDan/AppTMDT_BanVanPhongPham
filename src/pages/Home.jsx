@@ -1,70 +1,34 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import HeroBanner from '../components/home/HeroBanner';
+import ProductCard from '../components/common/ProductCard';
+import { PRODUCTS, CATEGORIES } from '../data/products';
+import '../components/home/Home.css';
+import '../css/home.css';
 
 export function Home()
 {
+    const [category, setCategory] = useState('all');
+    const list = category === 'all' ? PRODUCTS : PRODUCTS.filter((p) => p.category === category);
+
     return (
-        <div className='home-page'>
-            <header className='home-header'>
-                <Link to='/' className='brand'>
-                    VHD<span>STORE</span>
-                </Link>
+        <>
+            <HeroBanner />
+            <section id='products'>
+                <h2 className='section-title'>Sản phẩm nổi bật</h2>
 
-                <nav>
-                    <Link to='/'>Trang chủ</Link>
-                    <a href='#products'>Sản phẩm</a>
-                    <a href='#about'>Giới thiệu</a>
-                </nav>
-
-                <div className='header-actions'>
-                    <Link to='/login' className='login-link'>
-                        Đăng nhập
-                    </Link>
-
-                    <Link to='/register' className='register-link'>
-                        Đăng ký
-                    </Link>
+                <div className='filter-bar'>
+                    {['all', ...CATEGORIES].map((c) => (
+                        <button key={c} type='button' className={c === category ? 'chip active' : 'chip'}
+                            onClick={() => setCategory(c)}>
+                            {c === 'all' ? 'Tất cả' : c}
+                        </button>
+                    ))}
                 </div>
-            </header>
-            <main>
-                <section className='main'>
-                    <div className='content'>
-                        <span className='label'>
-                            VHDSTORE - Văn phòng phẩm chất lượng
-                        </span>
 
-                        <h1>
-                            Khơi nguồn sáng tạo,
-                            <br />
-                            từ những điều nhỏ nhất
-                        </h1>
-
-                        <p>
-                            Khám phá văn phòng phẩm của chúng tôi với nhiều mặt hàng phục vụ học tập và công việc.
-                        </p>
-
-                        <a href='#products' className='shop-btn'>
-                            Khám phá ngay
-                        </a>
-                    </div>
-                </section>
-                <section id='products' className='product-sec'>
-                    <h2>Sản phẩm nổi bật</h2>
-                    <p>Những sản phẩm văn phòng được ưa chuộng</p>
-
-                    <div className='product-placeholder'>
-                        Sản phẩm sẽ được cập nhật liên tục ngay khi có thay đổi.
-                    </div>
-                </section>
-                <section id='about' className='about-sec'>
-                    <h2>Về VHDSTORE</h2>
-                    <p>
-                        VHDSTORE mang đến giải pháp mua sắm văn phòng phẩm tiện lợi, chất lượng và tiêt kiệm.
-                    </p>
-                </section>
-            </main>
-            <footer className='home-footer'>
-                © 2026 VHDSTORE. All rights reserved.
-            </footer>
-        </div>
+                <div className='product-grid'>
+                    {list.map((p) => <ProductCard key={p.id} product={p} />)}
+                </div>
+            </section>
+        </>
     );
 }

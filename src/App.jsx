@@ -1,41 +1,46 @@
+import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-import TopBar from './components/layout/TopBar';
-import Header from './components/layout/Header';
-import Navbar from './components/layout/Navbar';
-import HeroBanner from './components/home/HeroBanner';
+import Cart from './pages/Cart';
+import Orders from './pages/Order';
+import { Home } from './pages/Home';
+import { Login } from './pages/Login';
+import Checkout from './pages/Checkout';
+import NotFound from './pages/NotFound';
+import OrderDone from './pages/OrderDone';
+import { Register } from './pages/Register';
+import { RequiredAuth, Custom} from './routes/Custom';
+import MainLayout from './components/layout/MainLayout';
 
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
+const Products = lazy(() => import ('./products'));
 
-import './components/layout/Layout.css';
-import './components/home/Home.css';
-import './Auth.css';
-import './App.css'
-
-function HomePage() {
-    return (
-        <>
-            <TopBar />
-            <Header />
-            <Navbar />
-
-            <main className='site-container'>
-                <HeroBanner />
-
-                <h1>Chào mừng đến với VHD Store</h1>
-                <p>Cửa hàng văn phòng phẩm của chúng tôi</p>
-            </main>
-        </>
-    );
-}
-
-function App() {
+function App()
+{
     return (
         <Routes>
-            <Route path='/' element={<HomePage />} />
-            <Route path='/login' element={<LoginPage />} />
-            <Route path='/register' element={<RegisterPage />} />
+            <Route element={<Custom />}>
+                <Route path='/login' element={<Login />} />
+                <Route path='/register' element={<Register />} />
+            </Route>
+
+            <Route path='/products' element={
+                <Suspense fallback={<div className='page-loading'>Đang tải...</div>}>
+                    <Products />
+                </Suspense>
+            } />
+
+            <Route element={<MainLayout />}>
+                <Route path='/' element={<Home />} />
+                <Route path='/cart' element={<Cart />} />
+
+                <Route element={<RequiredAuth />}>
+                    <Route path='/checkout' element={<Checkout />} />
+                    <Route path='/order-done/:id' element={<OrderDone />} />
+                    <Route path='/account/orders' element={<Orders />} />
+                </Route>
+
+                <Route path='*' element={<NotFound />} />
+            </Route>
         </Routes>
     );
 }

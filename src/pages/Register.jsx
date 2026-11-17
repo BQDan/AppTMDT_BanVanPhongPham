@@ -18,7 +18,7 @@ export function Register()
     const missing = validatePassword(form.password);
     const strength = form.password ? 8 - missing.length : 0;
 
-    const onSubmit = async(s) =. {
+    const onSubmit = async(s) => {
         e.preventDefault();
         setBusy(true);
         const response = await register(form);
@@ -58,7 +58,7 @@ export function Register()
                     )}
                     {Field({name: 'confirm', label:'Nhập lại mật khẩu', type:'password', placeholder:'Nhập lại mật khẩu...', autoComplete:'new-password'})}
 
-                    <button type='submit' disabled={busy}>{busy : 'Đang xử lý...' : 'Đăng ký'}</button>
+                    <button type='submit' disabled={busy}>{busy ? 'Đang xử lý...' : 'Đăng ký'}</button>
                 </form>
                 
                 <p className='auth-switch'>

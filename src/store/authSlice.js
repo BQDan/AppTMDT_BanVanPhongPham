@@ -9,7 +9,7 @@ function loadInit(){
     const sessionId = readJSON(KEYS.session, null);
     return {
         users: Array.isArray(users) ? users : [],
-        currentId: users.some((u) => u.id === sessionId ? sessionId : null)
+        currentId: users.some((u) => u.id === sessionId) ? sessionId : null
     };
 }
 
@@ -24,7 +24,7 @@ const authSlice = createSlice({
 });
 
 export const { userAdded, loggedIn, loggedOut } = authSlice.actions;
-export default authSlice.reducers;
+export default authSlice.reducer;
 
 export const selectCurrentUser = (s) => 
     s.auth.users.find((u) => u.id === s.auth.currentId) || null;

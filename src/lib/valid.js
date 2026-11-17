@@ -3,7 +3,7 @@ const isDigit = (c) => c >= '0' && c <= '9';
 export const cleanText = (t, max) => 
     String(t ?? '').split('<').join('').split('>').join('').trim().slice(0, max);
 
-export const noEmpty = (e) => String(e ?? '').trim().length > 0;
+export const isNotEmpty = (e) => String(e ?? '').trim().length > 0;
 
 export const isValidEmail = (e)=> {
     const email = String(e ?? '').trim();

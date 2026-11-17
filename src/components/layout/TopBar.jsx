@@ -1,8 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth, ROLES } from "../../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function TopBar() {
-    const {use, logout} = useAuth();
+    const {user, logout} = useAuth();
     const navigate = useNavigate();
 
     return (

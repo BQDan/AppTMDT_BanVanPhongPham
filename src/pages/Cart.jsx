@@ -100,7 +100,7 @@ export default function Cart()
                     ))}
 
                     <div className="cart-actions">
-                        <Link to='/' className="btn btn-ghost"><- Tiếp tục mua sắm</Link>
+                        <Link to='/' className="btn btn-ghost">Tiếp tục mua sắm</Link>
                         <button 
                             type="button" 
                             className="btn btn-ghost danger"
