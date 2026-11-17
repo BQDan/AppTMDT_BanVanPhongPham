@@ -7,7 +7,8 @@ const categoriesList = [
     { id: 'paper', name: 'Giấy in - Giấy photo', icon: '📄' },
     { id: 'notebook', name: 'Tập vở - Sổ tay', icon: '🎒' },
     { id: 'pen', name: 'Dụng cụ viết', icon: '✏️' },
-    { id: 'file', name: 'File & Lưu trữ', icon: '📁' }
+    { id: 'file', name: 'File & Lưu trữ', icon: '📁' },
+    { id: 'device', name: 'Thiết bị văn phòng', icon: '🖨️' }
 ];
 
 export default function App() {
@@ -64,6 +65,7 @@ export default function App() {
                             <option value="notebook">Tập vở - Sổ tay</option>
                             <option value="pen">Dụng cụ viết</option>
                             <option value="file">File & Lưu trữ</option>
+                            <option value="device">Thiết bị văn phòng</option>
                         </select>
                         <input
                             type="text"
