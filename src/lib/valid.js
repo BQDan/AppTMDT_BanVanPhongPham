@@ -1,6 +1,6 @@
 const isDigit = (c) => c >= '0' && c <= '9';
 
-export const cleanText = (t, max) => 
+export const cleanText = (t, max) =>
     String(t ?? '').split('<').join('').split('>').join('').trim().slice(0, max);
 
 export const isNotEmpty = (e) => String(e ?? '').trim().length > 0;
@@ -31,7 +31,7 @@ export const isValidName = (n) => {
 
 export function validatePassword(password) {
     const errors = [];
-    const pw = String(password ?? '').split('');
+    const pw = String(password ?? '');
 
     if(pw.length < 8) errors.push('tối thiểu 8 ký tự');
 

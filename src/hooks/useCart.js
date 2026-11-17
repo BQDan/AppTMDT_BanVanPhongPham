@@ -13,9 +13,14 @@ export function useCart()
     const items = useSelector(C.selectCartItems);
 
     return useMemo(() => {
-        const lines = items.map((i) => {
+        const lines = (items || []).map((i) => {
             const product = getProduct(i.id);
-            return {...product, qty: i.qty, lineTotals: product.price * i.qty};
+
+            return {
+                ...product,
+                qty: i.qty,
+                lineTotals: product.price * i.qty
+            };
         });
         return {
             lines,
