@@ -362,11 +362,6 @@ body {
     border: 1px solid var(--border-color);
 }
 
-/* =========================================================
-   STYLE CHO CARD SẢN PHẨM & POPUP MODAL (BỔ SUNG)
-   ========================================================= */
-
-/* Card Sản Phẩm */
 .product-card {
     background: #ffffff;
     border: 1px solid var(--border-color);
@@ -416,7 +411,6 @@ body {
     font-weight: 600;
 }
 
-/* Chi Tiết Card */
 .product-details {
     padding: 12px;
     flex-grow: 1;
@@ -449,7 +443,6 @@ body {
     height: 33px;
 }
 
-/* Giá Sản Phẩm */
 .price-box {
     display: flex;
     align-items: center;
@@ -470,7 +463,6 @@ body {
     text-decoration: line-through;
 }
 
-/* Nút Xem Chi Tiết */
 .btn-detail {
     width: calc(100% - 24px);
     margin: 0 12px 12px 12px;
@@ -489,9 +481,6 @@ body {
     background-color: var(--dark-blue);
 }
 
-/* =========================================================
-   STYLE POPUP MODAL (TASK 3 & 4)
-   ========================================================= */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -615,4 +604,140 @@ body {
 
 .btn-add-cart:hover {
     background-color: #16a34a;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 28px;
+}
+
+.page-btn {
+    min-width: 36px;
+    height: 36px;
+    padding: 0 12px;
+    border: 1px solid var(--border-color);
+    background-color: #ffffff;
+    color: var(--text-main);
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.page-btn:hover:not(:disabled) {
+    border-color: var(--primary-blue);
+    color: var(--primary-blue);
+    background-color: #f0f7ff;
+}
+
+.page-btn.active {
+    background-color: var(--primary-blue);
+    color: #ffffff;
+    border-color: var(--primary-blue);
+}
+
+.page-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    background-color: #f8fafc;
+}
+
+.page-dots-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.page-jump-popover {
+    position: absolute;
+    bottom: 44px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 230px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+}
+
+.jump-header {
+    font-size: 12px;
+    font-weight: 700;
+    color: #01579b;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.jump-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+    max-height: 140px;
+    overflow-y: auto;
+    margin-bottom: 8px;
+}
+
+.jump-num {
+    padding: 5px 0;
+    border: 1px solid var(--border-color);
+    background: #f8fafc;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--text-main);
+}
+
+.jump-num:hover {
+    border-color: var(--primary-blue);
+    color: var(--primary-blue);
+    background: #f0f7ff;
+}
+
+.jump-num.active {
+    background: var(--primary-blue);
+    color: #ffffff;
+    border-color: var(--primary-blue);
+}
+
+.jump-form {
+    display: flex;
+    gap: 6px;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 8px;
+}
+
+.jump-form input {
+    flex: 1;
+    width: 100%;
+    padding: 4px 8px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    font-size: 12px;
+    outline: none;
+}
+
+.jump-form input:focus {
+    border-color: var(--primary-blue);
+}
+
+.jump-form button {
+    padding: 4px 12px;
+    background: var(--primary-blue);
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.jump-form button:hover {
+    background: var(--dark-blue);
 }
