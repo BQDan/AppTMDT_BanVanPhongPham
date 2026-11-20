@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import * as C from '../store/cartSlice';
-import { getProduct } from '../data/products';
-import { MAX_QTY } from '../lib/constants';
+import * as C from "../store/cartSlice";
+import { getProduct } from "../data/products";
+import { MAX_QTY } from "../lib/constants";
 
 export { MAX_QTY };
 

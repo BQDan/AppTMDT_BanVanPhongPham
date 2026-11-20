@@ -1,7 +1,6 @@
-import { useState } from 'react';
-import { useCart } from '../../hooks/useCart';
-import { formatVND } from '../../lib/format'
-;
+import { useState } from "react";
+import { useCart } from "../../hooks/useCart";
+import { formatVND } from "../../lib/format";
 
 export default function ProductCard({ product })
 {

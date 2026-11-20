@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import * as OD from '../store/orderSlice';
-import { selectCurrentUser } from '../store/authSlice';
+import * as OD from "../store/orderSlice";
+import {currentUser} from '../store/authSlice';
 
 export function useOrders()
 {

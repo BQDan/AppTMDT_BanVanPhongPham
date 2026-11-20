@@ -6,7 +6,7 @@ import '../css/auth.css';
 
 const EMPTY = {name:'', email:'', password:'', confirm:''};
 
-export function Register() 
+export default function Register() 
 {
     const {register} = useAuth();
     const navigate = useNavigate();
