@@ -3,9 +3,7 @@ const isDigit = (c) => c >= '0' && c <= '9';
 export const cleanText = (t, max) =>
     String(t ?? '').split('<').join('').split('>').join('').trim().slice(0, max);
 
-export const noEmpty = (e) => String(e ?? '').trim().length > 0;
-export const isNotEmpty = (value) =>
-    String(value ?? '').trim().length > 0;
+export const isNotEmpty = (e) => String(e ?? '').trim().length > 0;
 
 export const isValidEmail = (e)=> {
     const email = String(e ?? '').trim();
@@ -21,14 +19,15 @@ export const isValidEmail = (e)=> {
 };
 
 export const isValidPhone = (p) => {
-    const phone = p.split(' ').join('');
-    return (
-        (phone.startsWith('0') || phone.startsWith('+84')) &&
-        [...phone].filter((c) => c >= '0' && c <= '9').length === 10 && [...phone].every(isDigit)
-    );
+    let phone = String(p ?? '').split(' ').join('');
+    if(phone.startsWith('+84')) phone = '0' + phone.slice(3);
+    return phone.length === 10 && phone.startsWith('0') && [...phone].every(isDigit);
 };
 
-export const isValidName = (n) => n.length >= 2 && n.length <= 60;
+export const isValidName = (n) => {
+    const name = String(n ?? '').trim();
+    return name.length >= 2 && name.length <= 60;
+};
 
 export function validatePassword(password) {
     const errors = [];

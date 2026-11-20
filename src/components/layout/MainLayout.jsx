@@ -17,3 +17,4 @@ export default function MainLayout()
             <footer className='home-footer'>© 2026 VHDSTORE. All rights reserved.</footer>
         </>
     )
+}
