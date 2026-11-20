@@ -1,5 +1,5 @@
-import { useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import * as C from "../store/cartSlice";
 import { getProduct } from "../data/products";
@@ -10,7 +10,7 @@ export { MAX_QTY };
 export function useCart()
 {
     const dispatch = useDispatch();
-    const items = useSelector(C.selectCartItems);
+    const items = useSelector((s) => s.cart.items);
 
     return useMemo(() => {
         const lines = (items || []).map((i) => {

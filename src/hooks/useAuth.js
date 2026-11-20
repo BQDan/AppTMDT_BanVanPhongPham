@@ -7,10 +7,10 @@ export function useAuth(){
     const ready = useSelector(selectCurrentUser);
 
     const user = useMemo(() => {
-        if(!account) return null;
-        const { password: _pw, ...rest } = account;
+        if(!ready) return null;
+        const { password: _pw, ...rest } = ready;
         return rest;
-    }, [account]);
+    }, [ready]);
 
     const login = useCallback((form) => dispatch(loginUser(form)), [dispatch]);
     const register = useCallback((form) => dispatch(registerUser(form)), [dispatch]);
