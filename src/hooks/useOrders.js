@@ -2,13 +2,13 @@ import { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import * as OD from "../store/orderSlice";
-import {currentUser} from '../store/authSlice';
+import { selectCurrentUser } from "../store/authSlice";
 
 export function useOrders()
 {
     const dispatch = useDispatch();
     const all = useSelector((s) => s.orders.all);
-    const user = useSelector(currentUser);
+    const user = useSelector(selectCurrentUser);
 
     const orders = useMemo(() => {
         if(!user) return [];

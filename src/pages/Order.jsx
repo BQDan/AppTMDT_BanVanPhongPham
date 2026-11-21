@@ -22,8 +22,8 @@ export default function Orders()
             {orders.map((o) =>(
                 <article className='order-card' key={o.id}>
                     <header>
-                        <div><strong>{o.id}</strong><small>{new Date(o.createAt).toLocaleString('vi-VN')}</small></div>
-                        <span className={'status st-${o.status}'}>{ORDER_STATUS[o.status]}</span>
+                        <div><strong>{o.id}</strong><small>{new Date(o.createdAt).toLocaleString('vi-VN')}</small></div>
+                        <span className={`status st-${o.status}`}>{ORDER_STATUS[o.status]}</span>
                     </header>
                     <ul className='mini-list'>
                         {o.items.map((i) => (

@@ -10,7 +10,7 @@ export { MAX_QTY };
 export function useCart()
 {
     const dispatch = useDispatch();
-    const items = useSelector((s) => s.cart.items);
+    const items = useSelector(C.selectCartItems);
 
     return useMemo(() => {
         const lines = (items || []).map((i) => {
@@ -19,13 +19,13 @@ export function useCart()
             return {
                 ...product,
                 qty: i.qty,
-                lineTotals: product.price * i.qty
+                lineTotal: product.price * i.qty
             };
         });
         return {
             lines,
             count: lines.reduce((s, l) => s + l.qty, 0),
-            subtotal: lines.reduce((s, l) => s + l.lineTotals, 0),
+            subtotal: lines.reduce((s, l) => s + l.lineTotal, 0),
             addItem: (id, qty = 1) => dispatch(C.addItem({id, qty})),
             setQty: (id, qty) => dispatch(C.setQty({id, qty})),
             increase: (id) => dispatch(C.increase(id)),

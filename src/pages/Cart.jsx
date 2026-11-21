@@ -26,8 +26,8 @@ export default function Cart()
 
     const onQtyInput = (line, value) => {
         const num = Math.floor(Number(value));
-        if(!Number.isFinite(n)) return;
-        setQty(line.id, Math.min(Math.max(n, 1), Math.min(line.stock, MAX_QTY)));
+        if(!Number.isFinite(num)) return;
+        setQty(line.id, Math.min(Math.max(num, 1), Math.min(line.stock, MAX_QTY)));
     };
 
     const goCheckOut = () => navigate('/checkout');

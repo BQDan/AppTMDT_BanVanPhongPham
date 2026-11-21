@@ -10,7 +10,7 @@ import '../css/cart.css';
 export default function Checkout()
 {
     const { user } = useAuth();
-    const {lines, subTotal, clearCart } = useCart();
+    const {lines, subtotal, clearCart } = useCart(); // Yann
     const { placeOrder } = useOrders();
     const navigate = useNavigate();
     const [form, setForm] = useState({
@@ -27,16 +27,17 @@ export default function Checkout()
 
     if(!lines.length && !placed) return <Navigate to='/cart' replace />
 
-    const shiping = shippingFor(subTotal);
-    const onChange = (c) => setForm({ ...form, [c.target.name]: errors.target.value });
+    const shipping = shippingFor(subtotal);
+    const onChange = (c) =>
+        setForm({ ...form, [c.target.name]: c.target.value });
 
     const onSubmit = (s) => {
-        s.prevemtDefault();
+        s.preventDefault();
         const response = placeOrder(form, lines.map((l) => ({id: l.id, qty: l.qty })));
         if(!response.ok) return setErrors(response.errors);
         setPlaced(true);
         clearCart();
-        navigate('/order-done/${response.order.id}', {replace: true});
+        navigate(`/order-done/${response.order.id}`, { replace: true });
     };
 
     const error = (e) => errors[e] && <span className='field-error' role='alert'>{errors[e]}</span>;
@@ -95,7 +96,7 @@ export default function Checkout()
                     <div className='pay-options'>
                         {Object.entries(PAYMENTS).map(([key, label]) => (
                             <label key={key} className={'pay-opt' + (form.payment === key ? ' active' : '')}>
-                                <input type='radio' name='payments' value={key}
+                                <input type='radio' name='payment' value={key}
                                     checked={form.payment === key} onChange={onChange} />
                                 {label}
                             </label>
@@ -115,8 +116,8 @@ export default function Checkout()
                         ))}
                     </ul>
                     <dl>
-                        <div><dt>Tạm tính</dt><dd>{formatVND(subTotal)}</dd></div>
-                        <div><dt>Phí vận chuyển</dt><dd>{shiping ? formatVND(shiping) : 'Miễn phí'}</dd></div>
+                        <div><dt>Tạm tính</dt><dd>{formatVND(subtotal)}</dd></div>
+                        <div><dt>Phí vận chuyển</dt><dd>{shiping ? formatVND(shipping) : 'Miễn phí'}</dd></div>
                         <div className='sum-total'><dt>Tổng cộng: </dt><dd>{formatVND(subTotal + shiping)}</dd></div>
                     </dl>
                     <button type='submit' className='btn btn-primary btn-block'>Xác nhận đặt hàng</button>

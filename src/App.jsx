@@ -10,7 +10,13 @@ import RegisterPage from "./pages/RegisterPage";
 import "./components/layout/Layout.css";
 import "./components/home/Home.css";
 import "./Auth.css";
-
+import Products from "./products.jsx";
+import Cart from "./pages/Cart.jsx";
+import Checkout from "./pages/Checkout.jsx";
+import Order from "./pages/Order.jsx";
+import OrderDone from "./pages/OrderDone.jsx";
+import NotFound from "./pages/NotFound.jsx";
+import { RequiredAuth } from "./routes/Custom.jsx";
 function HomePage() {
     return (
         <>
@@ -34,7 +40,18 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/cart" element={<Cart />} />
+
+            <Route element={<RequiredAuth />}>
+                <Route path="/checkout" element={<Checkout />} />
+                <Route path="/account/orders" element={<Order />} />
+                <Route path="/order-done/:id" element={<OrderDone />} />
+            </Route>
+
+            <Route path="*" element={<NotFound />} />
         </Routes>
+
     );
 }
 

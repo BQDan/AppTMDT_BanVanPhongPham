@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import './products.css';
-
+import { Link } from "react-router-dom";
 const categoriesList = [
     { id: 'all', name: 'Tất cả sản phẩm', icon: '📂' },
     { id: 'paper', name: 'Giấy in - Giấy photo', icon: '📄' },
@@ -82,8 +82,8 @@ export default function App() {
                         <span>Email: <a href="mailto:dvkhatvhdstore.com.vn">dvkhatvhdstore.com.vn</a></span>
                     </div>
                     <div className="top-right">
-                        <a href="#login">Đăng nhập</a>
-                        <a href="#register">Đăng ký</a>
+                        <Link to="/login">Đăng nhập</Link>
+                        <Link to="/register">Đăng ký</Link>
                         <a href="#contact">Liên hệ</a>
                     </div>
                 </div>
