@@ -1,0 +1,170 @@
+
+.site-container {
+    width: min(1200px, 94%);
+    margin: 0 auto;
+}
+
+/* TOP BAR */
+.topbar {
+    background: #f4f4f4;
+    border-bottom: 1px solid #e5e5e5;
+    color: #555;
+    font-size: 13px;
+}
+
+.topbar-inner {
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.topbar-inner p {
+    margin: 0;
+}
+
+.topbar-links {
+    display: flex;
+    gap: 20px;
+}
+
+.topbar a {
+    color: #444;
+    text-decoration: none;
+}
+
+/* HEADER */
+.site-header {
+    background: white;
+    padding: 20px 0;
+}
+
+.header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+}
+
+.brand img {
+    width: 160px;
+    height: 70px;
+    object-fit: contain;
+}
+
+.search {
+    display: flex;
+    height: 45px;
+    flex: 1;
+    max-width: 550px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.search input {
+    flex: 1;
+    min-width: 0;
+    padding: 0 15px;
+    border: none;
+    outline: none;
+}
+
+.search button {
+    width: 55px;
+    border: none;
+    background: #e92735;
+    color: white;
+    font-size: 25px;
+    cursor: pointer;
+}
+
+.header-contact,
+.header-cart {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #333;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.header-icon {
+    font-size: 25px;
+    color: #e92735;
+}
+
+.header-contact small,
+.header-contact strong,
+.header-cart small,
+.header-cart strong {
+    display: block;
+}
+
+.header-contact small,
+.header-cart small {
+    font-size: 11px;
+    color: #777;
+}
+
+.header-contact strong {
+    color: #e92735;
+}
+
+/* NAVBAR */
+.main-nav {
+    background: #eee;
+    border-block: 1px solid #ddd;
+}
+
+.nav-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 46px;
+}
+
+.nav-inner a {
+    padding: 14px 8px;
+    color: #444;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.nav-inner a:hover {
+    background: #0879d9;
+    color: white;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    .header-inner {
+        flex-wrap: wrap;
+    }
+
+    .search {
+        order: 3;
+        flex-basis: 100%;
+        max-width: none;
+    }
+
+    .nav-inner {
+        overflow-x: auto;
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 600px) {
+    .topbar-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 8px 0;
+        gap: 8px;
+    }
+
+    .header-cart {
+        display: none;
+    }
+}
