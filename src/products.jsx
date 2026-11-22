@@ -14,6 +14,8 @@ export default function App() {
     const [productsData, setProductsData] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    const [searchTerm, setSearchTerm] = useState('');
+
     const [currentPage, setCurrentPage] = useState(1);
     const [openJumpIndex, setOpenJumpIndex] = useState(null);
     const [jumpInput, setJumpInput] = useState('');
@@ -36,10 +38,33 @@ export default function App() {
             });
     }, []);
 
-    const totalPages = Math.ceil(productsData.length / itemsPerPage);
+    const filteredProducts = productsData.filter(product => {
+        const keyword = searchTerm.trim().toLowerCase();
+        if (!keyword) return true;
+        return (
+            product.name.toLowerCase().includes(keyword) ||
+            (product.description && product.description.toLowerCase().includes(keyword))
+        );
+    });
+
+    const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentProducts = productsData.slice(indexOfFirstItem, indexOfLastItem);
+    const currentProducts = filteredProducts.slice(indexOfFirstItem, indexOfLastItem);
+
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+        setCurrentPage(1);
+        setOpenJumpIndex(null);
+    };
+
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        setCurrentPage(1);
+        if (productSectionRef.current) {
+            productSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    };
 
     const handlePageChange = (pageNumber) => {
         if (pageNumber < 1 || pageNumber > totalPages) return;
@@ -91,12 +116,16 @@ export default function App() {
 
             <header className="main-header">
                 <div className="container header-container">
-                    <div className="logo-box">
+                    <div
+                        className="logo-box"
+                        onClick={() => { setSearchTerm(''); setCurrentPage(1); }}
+                        style={{ cursor: 'pointer' }}
+                    >
                         <div className="logo-badge">VHD</div>
                         <span className="logo-text">STORE</span>
                     </div>
 
-                    <div className="header-search">
+                    <form className="header-search" onSubmit={handleSearchSubmit}>
                         <select className="cat-select">
                             <option value="all">Tất cả danh mục</option>
                             <option value="paper">Giấy in</option>
@@ -107,10 +136,12 @@ export default function App() {
                         </select>
                         <input
                             type="text"
+                            value={searchTerm}
+                            onChange={handleSearchChange}
                             placeholder="Tìm kiếm sản phẩm văn phòng phẩm..."
                         />
-                        <button className="btn-search">🔍</button>
-                    </div>
+                        <button type="submit" className="btn-search">🔍</button>
+                    </form>
 
                     <div className="header-actions">
                         <div className="action-item hotline">
@@ -179,12 +210,16 @@ export default function App() {
 
                     <section className="product-section" ref={productSectionRef}>
                         <div className="section-header">
-                            <h2 className="section-title">DANH SÁCH SẢN PHẨM ({productsData.length})</h2>
+                            <h2 className="section-title">DANH SÁCH SẢN PHẨM ({filteredProducts.length})</h2>
                         </div>
 
                         {loading ? (
                             <div className="no-results">
                                 <p>⏳ Đang tải dữ liệu sản phẩm...</p>
+                            </div>
+                        ) : currentProducts.length === 0 ? (
+                            <div className="no-results">
+                                <p>Không tìm thấy sản phẩm nào phù hợp với từ khóa "{searchTerm}".</p>
                             </div>
                         ) : (
                             <>
