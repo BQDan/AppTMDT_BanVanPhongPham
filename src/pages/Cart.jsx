@@ -47,7 +47,9 @@ export default function Cart()
                     {lines.map((line) => (
                         <div className="cart-row" key={line.id}>
                             <div className="cart-product">
-                                <div className="cart-thumb" aria-hidden='true'>{line.image}</div>
+                                <div className="cart-thumb">
+                                    <img src={line.image} alt={line.name} />
+                                </div>
                                 <div>
                                     <h3>{line.name}</h3>
                                     <small>{line.category} · Còn {line.stock}</small>

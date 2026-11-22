@@ -1,27 +1,33 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
+
 function LoginPage() {
     const navigate = useNavigate();
+    const location = useLocation();
     const { login } = useAuth();
-    const [error, setError] = useState("");
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
 
     const handleLogin = (event) => {
         event.preventDefault();
+        setError("");
 
         if (!email || !password) {
-            alert("Vui lòng nhập đầy đủ email và mật khẩu!");
+            setError("Vui lòng nhập đầy đủ email và mật khẩu.");
             return;
         }
 
         const result = login({ email, password });
+
         if (!result.ok) {
             setError(result.errors);
             return;
         }
-        navigate("/");
+
+        navigate(location.state?.from || "/", { replace: true });
     };
 
     return (
@@ -38,8 +44,9 @@ function LoginPage() {
 
                 <form onSubmit={handleLogin}>
                     <div className="form-group">
-                        <label>Email</label>
+                        <label htmlFor="email">Email</label>
                         <input
+                            id="email"
                             type="email"
                             placeholder="Nhập email của bạn"
                             value={email}
@@ -48,8 +55,9 @@ function LoginPage() {
                     </div>
 
                     <div className="form-group">
-                        <label>Mật khẩu</label>
+                        <label htmlFor="password">Mật khẩu</label>
                         <input
+                            id="password"
                             type="password"
                             placeholder="Nhập mật khẩu"
                             value={password}
@@ -67,6 +75,7 @@ function LoginPage() {
                     </div>
 
                     {error && <p className="auth-error">{error}</p>}
+
                     <button type="submit" className="auth-button">
                         ĐĂNG NHẬP
                     </button>
@@ -74,7 +83,9 @@ function LoginPage() {
 
                 <div className="auth-footer">
                     <span>Chưa có tài khoản?</span>{" "}
-                    <Link to="/register">Đăng ký ngay</Link>
+                    <Link to="/register" state={location.state}>
+                        Đăng ký ngay
+                    </Link>
                 </div>
             </div>
         </div>
