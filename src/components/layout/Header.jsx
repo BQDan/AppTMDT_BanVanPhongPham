@@ -1,7 +1,26 @@
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useCart } from "../../hooks/useCart";
+
 function Header() {
     const { count } = useCart();
+    const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const [keyword, setKeyword] = useState(searchParams.get("search") || "");
+
+    useEffect(() => {
+        setKeyword(searchParams.get("search") || "");
+    }, [searchParams]);
+
+    const handleSearchSubmit = (event) => {
+        event.preventDefault();
+        const trimmed = keyword.trim();
+        if (trimmed) {
+            navigate(`/products?search=${encodeURIComponent(trimmed)}`);
+        } else {
+            navigate("/products");
+        }
+    };
 
     return (
         <header className="site-header">
@@ -16,10 +35,12 @@ function Header() {
 
                 <form
                     className="search"
-                    onSubmit={(event) => event.preventDefault()}
+                    onSubmit={handleSearchSubmit}
                 >
                     <input
                         type="search"
+                        value={keyword}
+                        onChange={(e) => setKeyword(e.target.value)}
                         placeholder="Bạn muốn tìm sản phẩm gì?"
                     />
 

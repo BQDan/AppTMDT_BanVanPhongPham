@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 
 import { PRODUCTS } from "./data/products";
 import { useCart } from "./hooks/useCart";
@@ -16,11 +16,26 @@ const categoriesList = [
     { id: "device", name: "Thiết bị văn phòng", icon: "🖨️" },
 ];
 
+const removeVietnameseTones = (str) => {
+    if (!str) return "";
+    return str
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/đ/g, "d")
+        .replace(/Đ/g, "D")
+        .toLowerCase()
+        .replace(/\s+/g, " ")
+        .trim();
+};
+
 export default function App() {
     const productsData = PRODUCTS;
     const { addItem, count, lines } = useCart();
+    const [searchParams, setSearchParams] = useSearchParams();
 
-    const [searchTerm, setSearchTerm] = useState("");
+    const [searchTerm, setSearchTerm] = useState(
+        searchParams.get("search") || ""
+    );
     const [addedProductId, setAddedProductId] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [openJumpIndex, setOpenJumpIndex] = useState(null);
@@ -29,13 +44,23 @@ export default function App() {
     const itemsPerPage = 9;
     const productSectionRef = useRef(null);
 
+    useEffect(() => {
+        const query = searchParams.get("search") || "";
+        setSearchTerm(query);
+        setCurrentPage(1);
+        setOpenJumpIndex(null);
+    }, [searchParams]);
+
     const filteredProducts = productsData.filter((product) => {
-        const keyword = searchTerm.trim().toLowerCase();
+        const keyword = removeVietnameseTones(searchTerm);
         if (!keyword) return true;
+
+        const productName = removeVietnameseTones(product.name);
+        const productDesc = removeVietnameseTones(product.description);
+
         return (
-            product.name.toLowerCase().includes(keyword) ||
-            (product.description &&
-                product.description.toLowerCase().includes(keyword))
+            productName.includes(keyword) ||
+            productDesc.includes(keyword)
         );
     });
 
@@ -48,9 +73,16 @@ export default function App() {
     );
 
     const handleSearchChange = (event) => {
-        setSearchTerm(event.target.value);
+        const value = event.target.value;
+        setSearchTerm(value);
         setCurrentPage(1);
         setOpenJumpIndex(null);
+
+        if (value.trim()) {
+            setSearchParams({ search: value }, { replace: true });
+        } else {
+            setSearchParams({}, { replace: true });
+        }
     };
 
     const handleSearchSubmit = (event) => {
@@ -155,6 +187,7 @@ export default function App() {
                         aria-label="VHD Store"
                         onClick={() => {
                             setSearchTerm("");
+                            setSearchParams({});
                             setCurrentPage(1);
                         }}
                     >
