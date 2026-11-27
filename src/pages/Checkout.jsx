@@ -17,10 +17,10 @@ export default function Checkout() {
 
     const [form, setForm] = useState({
         fullName: user?.name || "",
-        phone: user?.phone || lastShipping.phone || "",
+        phone: user?.phone || lastShipping?.phone || "",
         email: user?.email || "",
-        address: lastShipping.address || "",
-        city: lastShipping.city || "",
+        address: lastShipping?.address || "",
+        city: lastShipping?.city || "",
         note: "",
         payment: "cod",
     });

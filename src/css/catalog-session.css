@@ -1,0 +1,45 @@
+.catalog-session.is-authenticated .top-right a[href="/login"],
+.catalog-session.is-authenticated .top-right a[href="/register"] {
+    display: none;
+}
+
+.catalog-account-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 10px max(15px, calc((100% - 1170px) / 2));
+    color: #174b2a;
+    background: #eaf7ee;
+    border-bottom: 1px solid #c9e8d1;
+    font-size: 14px;
+}
+
+.catalog-account-bar > div {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.catalog-account-bar a,
+.catalog-account-bar button {
+    padding: 0;
+    color: #1769d2;
+    background: none;
+    border: 0;
+    font: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.catalog-account-bar a:hover,
+.catalog-account-bar button:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+    .catalog-account-bar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

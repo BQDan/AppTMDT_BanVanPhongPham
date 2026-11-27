@@ -7,9 +7,13 @@ import { selectCurrentUser } from './authSlice';
 import { clearCart, selectCartItems } from './cartSlice';
 
 const isValidOrder = (o) => {
-    o && typeof o === 'object' && o.id && o.userId && o.info && typeof o.info === 'object' &&
-    Array.isArray(o.items) && o.items.length > 0 &&
-    o.items.every((i) = i && Number.isFinite(Number(i.price)) && Number(i.qty) > 0)
+    return Boolean(o && typeof o === 'object' && typeof o.id === 'string' && o.id &&
+        typeof o.userId === 'string' && o.userId && o.info && typeof o.info === 'object' &&
+        Array.isArray(o.items) && o.items.length > 0 &&
+        o.items.every((i) => i && i.id && typeof i.name === 'string' &&
+            Number.isFinite(Number(i.price)) && Number(i.price) >= 0 &&
+            Number.isInteger(Number(i.qty)) && Number(i.qty) > 0) &&
+        Number.isFinite(Number(o.total)) && Number(o.createdAt) > 0);
 };
 
 function loadOrders() {

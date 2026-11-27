@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Link, useNavigate } from "react-router-dom";
 import TopBar from "./components/layout/TopBar";
 import Header from "./components/layout/Header";
 import Navbar from "./components/layout/Navbar";
@@ -18,6 +18,8 @@ import OrderDone from "./pages/OrderDone.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import { RequiredAuth } from "./routes/Custom.jsx";
 import MainLayout from './components/layout/MainLayout.jsx';
+import { useAuth } from "./hooks/useAuth";
+import "./css/catalog-session.css";
 function HomePage() {
     return (
         <>
@@ -35,14 +37,33 @@ function HomePage() {
     );
 }
 
+function AccountAwareProducts() {
+    const { user, isAuthenticated, logout } = useAuth();
+    const navigate = useNavigate();
+
+    return (
+        <div className={isAuthenticated ? "catalog-session is-authenticated" : "catalog-session"}>
+            {isAuthenticated && (
+                <div className="catalog-account-bar" role="status">
+                    <span>Đang đăng nhập: <strong>{user.name}</strong> ({user.email})</span>
+                    <div>
+                        <Link to="/account/orders">Đơn hàng của tôi</Link>
+                        <button type="button" onClick={() => { logout(); navigate("/login"); }}>Đăng xuất</button>
+                    </div>
+                </div>
+            )}
+            <Products />
+        </div>
+    );
+}
+
 function App() {
     return (
         <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/cart" element={<Cart />} />
+            <Route path="/products" element={<AccountAwareProducts />} />
 
             <Route element={<MainLayout />}>
                 <Route path="/cart" element={<Cart />} />
