@@ -17,6 +17,7 @@ import Order from "./pages/Order.jsx";
 import OrderDone from "./pages/OrderDone.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import { RequiredAuth } from "./routes/Custom.jsx";
+import Footer from "./components/layout/Footer";
 function HomePage() {
     return (
         <>
@@ -30,6 +31,7 @@ function HomePage() {
                 <h1>Chào mừng đến với VHD Store</h1>
                 <p>Cửa hàng văn phòng phẩm của chúng tôi</p>
             </main>
+            <Footer />
         </>
     );
 }
