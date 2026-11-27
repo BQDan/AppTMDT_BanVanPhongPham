@@ -16,9 +16,16 @@ export function useOrders()
         return [...list].sort((a, b) => b.createdAt - a.createdAt);
     }, [all, user]);
     
+    const lastShipping = useMemo(() => {
+        const info = orders[0]?.info;
+        return info ? { phone: info.phone, address: info.address, city: info.city } : null;
+    }, [orders]);
+
     return useMemo(() => ({
         orders,
+        lastShipping,
+        getOrder: (id) => orders.find((od) => od.id === id) || null,
         placeOrder: (infor, items) => dispatch(OD.placeOrder(infor, items)),
         cancelOrder: (id) => dispatch(OD.cancelOrder(id)),
-    }), [orders, dispatch]);
+    }), [orders, lastShipping, dispatch]);
 }

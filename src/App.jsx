@@ -17,6 +17,7 @@ import Order from "./pages/Order.jsx";
 import OrderDone from "./pages/OrderDone.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import { RequiredAuth } from "./routes/Custom.jsx";
+import MainLayout from './components/layout/MainLayout.jsx';
 function HomePage() {
     return (
         <>
@@ -43,10 +44,14 @@ function App() {
             <Route path="/products" element={<Products />} />
             <Route path="/cart" element={<Cart />} />
 
-            <Route element={<RequiredAuth />}>
-                <Route path="/checkout" element={<Checkout />} />
-                <Route path="/account/orders" element={<Order />} />
-                <Route path="/order-done/:id" element={<OrderDone />} />
+            <Route element={<MainLayout />}>
+                <Route path="/cart" element={<Cart />} />
+
+                <Route element={<RequiredAuth />}>
+                    <Route path="/checkout" element={<Checkout />} />
+                    <Route path="/account/orders" element={<Order />} />
+                    <Route path="/order-done/:id" element={<OrderDone />} />
+                </Route>
             </Route>
 
             <Route path="*" element={<NotFound />} />

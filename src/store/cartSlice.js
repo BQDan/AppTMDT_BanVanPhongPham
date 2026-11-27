@@ -9,7 +9,7 @@ export function cleanItems(items) {
     const map = new Map();
     for (const it of items) {
         const p = it && getProduct(it.id);
-        if (!p) continue;
+        if (!p || p.stock < 1) continue;
         const qty = Math.floor(Number(it.qty));
         if (!Number.isFinite(qty) || qty < 1) continue;
         map.set(p.id, Math.min((map.get(p.id) || 0) + qty, Math.min(p.stock, MAX_QTY)));
@@ -18,14 +18,16 @@ export function cleanItems(items) {
 }
 
 function loadInitial() {
-    const saved = readJSON(KEYS.carts, {});
-    const users = readJSON(KEYS.users, []);
+    const stored = readJSON(KEYS.carts, {});
+    const saved = stored && typeof stored === 'object' && !Array.isArray(stored) ? stored : {};
+    const stUsers = readJSON(KEYS.users, []);
+    const users = Array.isArray(stUsers) ? stUsers : [];
     const sessionId = readJSON(KEYS.session, null);
     const carts = {};
     for (const key of Object.keys(saved)) carts[key] = cleanItems(saved[key]);
     if (!carts.guest) carts.guest = [];
 
-    const ownerKey = users.some((u) => u.id === sessionId) ? sessionId : 'guest';
+    const ownerKey = users.some((u) => u && u.id === sessionId) ? sessionId : 'guest';
     if (!carts[ownerKey]) carts[ownerKey] = [];
     return { carts, ownerKey };
 }
