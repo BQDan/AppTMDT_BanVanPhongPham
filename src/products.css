@@ -741,3 +741,89 @@ body {
 .jump-form button:hover {
     background: var(--dark-blue);
 }
+
+.category-item.active {
+    background-color: #e0f2fe;
+    color: #0b66c3;
+    font-weight: 700;
+    border-left: 3px solid #0b66c3;
+}
+
+.nav-link.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-bottom: 2px solid #ffffff;
+    font-weight: 700;
+}
+
+.sidebar-filter-box {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.price-filter-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 8px 12px;
+}
+
+.price-radio-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #334155;
+    cursor: pointer;
+}
+
+.price-radio-item input[type="radio"] {
+    accent-color: #0b66c3;
+    cursor: pointer;
+}
+
+.filter-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.filter-controls {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.filter-select {
+    padding: 7px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background-color: #ffffff;
+    font-size: 14px;
+    color: #1e293b;
+    cursor: pointer;
+    outline: none;
+}
+
+.filter-select:focus {
+    border-color: #0b66c3;
+}
+
+.btn-reset-filter {
+    padding: 7px 12px;
+    border: 1px solid #fda4af;
+    border-radius: 6px;
+    background-color: #fff1f2;
+    color: #e11d48;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-reset-filter:hover {
+    background-color: #ffe4e6;
+}
