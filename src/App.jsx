@@ -17,13 +17,10 @@ import Order from "./pages/Order.jsx";
 import OrderDone from "./pages/OrderDone.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import { RequiredAuth } from "./routes/Custom.jsx";
-<<<<<<< HEAD
 import MainLayout from './components/layout/MainLayout.jsx';
 import { useAuth } from "./hooks/useAuth";
 import "./css/catalog-session.css";
-=======
 import Footer from "./components/layout/Footer";
->>>>>>> Vu
 function HomePage() {
     return (
         <>
