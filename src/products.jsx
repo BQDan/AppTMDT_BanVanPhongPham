@@ -43,6 +43,13 @@ export default function App() {
 
     const itemsPerPage = 9;
     const productSectionRef = useRef(null);
+    const requestedCategory = searchParams.get("category") || "all";
+
+    const selectedCategory = categoriesList.some(
+        (category) => category.id === requestedCategory
+    )
+        ? requestedCategory
+        : "all";
 
     useEffect(() => {
         const query = searchParams.get("search") || "";
@@ -50,8 +57,15 @@ export default function App() {
         setCurrentPage(1);
         setOpenJumpIndex(null);
     }, [searchParams]);
-
     const filteredProducts = productsData.filter((product) => {
+        // Nếu đã chọn danh mục, bỏ qua sản phẩm thuộc danh mục khác
+        if (
+            selectedCategory !== "all" &&
+            product.category !== selectedCategory
+        ) {
+            return false;
+        }
+        // Lọc từ
         const keyword = removeVietnameseTones(searchTerm);
         if (!keyword) return true;
 
@@ -77,12 +91,35 @@ export default function App() {
         setSearchTerm(value);
         setCurrentPage(1);
         setOpenJumpIndex(null);
+        const nextParams = new URLSearchParams(searchParams);
 
         if (value.trim()) {
-            setSearchParams({ search: value }, { replace: true });
+            nextParams.set("search", value);
         } else {
-            setSearchParams({}, { replace: true });
+            nextParams.delete("search");
         }
+
+        setSearchParams(nextParams, { replace: true });
+    };
+
+    const handleCategorySelect = (categoryId) => {
+        const nextParams = new URLSearchParams(searchParams);
+
+        if (categoryId === "all") {
+            nextParams.delete("category");
+        } else {
+            nextParams.set("category", categoryId);
+        }
+
+        setSearchParams(nextParams, { replace: true });
+        setCurrentPage(1);
+        setOpenJumpIndex(null);
+        setJumpInput("");
+
+        productSectionRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+        });
     };
 
     const handleSearchSubmit = (event) => {
@@ -202,6 +239,8 @@ export default function App() {
                         <select
                             className="cat-select"
                             aria-label="Chọn danh mục"
+                            value={selectedCategory}
+                            onChange={(event) => handleCategorySelect(event.target.value)}
                         >
                             <option value="all">Tất cả danh mục</option>
                             <option value="paper">Giấy in</option>
@@ -256,7 +295,11 @@ export default function App() {
                         <button
                             key={category.id}
                             type="button"
-                            className="nav-link"
+                            className={`nav-link${
+                                selectedCategory === category.id ? " active" : ""
+                            }`}
+                            aria-pressed={selectedCategory === category.id}
+                            onClick={() => handleCategorySelect(category.id)}
                         >
                             {category.icon} {category.name.toUpperCase()}
                         </button>
@@ -296,10 +339,25 @@ export default function App() {
 
                         <ul className="category-list">
                             {categoriesList.map((category) => (
-                                <li key={category.id} className="category-item">
-                                    <span>
-                                        {category.icon} {category.name}
-                                    </span>
+                                <li
+                                    key={category.id}
+                                    className={`category-item${
+                                        selectedCategory === category.id ? " active" : ""
+                                    }`}
+                                    role="button"
+                                    tabIndex={0}
+                                    aria-pressed={selectedCategory === category.id}
+                                    onClick={() => handleCategorySelect(category.id)}
+                                    onKeyDown={(event) => {
+                                        if (event.key === "Enter" || event.key === " ") {
+                                            event.preventDefault();
+                                            handleCategorySelect(category.id);
+                                        }
+                                    }}
+                                >
+    <span>
+        {category.icon} {category.name}
+    </span>
                                     <span className="arrow">›</span>
                                 </li>
                             ))}
