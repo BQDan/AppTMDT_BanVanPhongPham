@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 
 import { PRODUCTS } from "./data/products";
@@ -6,6 +6,7 @@ import { useCart } from "./hooks/useCart";
 import { formatVND } from "./lib/format";
 import { MAX_QTY } from "./lib/constants";
 import "./products.css";
+import Footer from "./components/layout/Footer";
 
 const categoriesList = [
     { id: "all", name: "Tất cả sản phẩm", icon: "📂" },
@@ -33,9 +34,16 @@ export default function App() {
     const { addItem, count, lines } = useCart();
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const [searchTerm, setSearchTerm] = useState(
-        searchParams.get("search") || ""
-    );
+    const searchTerm = searchParams.get("search") || "";
+    const requestedCategory = searchParams.get("category") || "all";
+    const selectedCategory = categoriesList.some(
+        (category) => category.id === requestedCategory
+    )
+        ? requestedCategory
+        : "all";
+
+    const [priceRange, setPriceRange] = useState("all");
+    const [sortBy, setSortBy] = useState("default");
     const [addedProductId, setAddedProductId] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [openJumpIndex, setOpenJumpIndex] = useState(null);
@@ -43,83 +51,96 @@ export default function App() {
 
     const itemsPerPage = 9;
     const productSectionRef = useRef(null);
-    const requestedCategory = searchParams.get("category") || "all";
 
-    const selectedCategory = categoriesList.some(
-        (category) => category.id === requestedCategory
-    )
-        ? requestedCategory
-        : "all";
-
-    useEffect(() => {
-        const query = searchParams.get("search") || "";
-        setSearchTerm(query);
+    const updateFilters = (nextSearch, nextCategory) => {
+        const params = {};
+        if (nextSearch && nextSearch.trim()) {
+            params.search = nextSearch;
+        }
+        if (nextCategory && nextCategory !== "all") {
+            params.category = nextCategory;
+        }
+        setSearchParams(params, { replace: true });
         setCurrentPage(1);
         setOpenJumpIndex(null);
-    }, [searchParams]);
-    const filteredProducts = productsData.filter((product) => {
-        // Nếu đã chọn danh mục, bỏ qua sản phẩm thuộc danh mục khác
-        if (
-            selectedCategory !== "all" &&
-            product.category !== selectedCategory
-        ) {
-            return false;
-        }
-        // Lọc từ
-        const keyword = removeVietnameseTones(searchTerm);
-        if (!keyword) return true;
+        setJumpInput("");
+    };
 
-        const productName = removeVietnameseTones(product.name);
-        const productDesc = removeVietnameseTones(product.description);
+    const filteredProducts = productsData
+        .filter((product) => {
+            if (
+                selectedCategory !== "all" &&
+                product.category !== selectedCategory
+            ) {
+                return false;
+            }
 
-        return (
-            productName.includes(keyword) ||
-            productDesc.includes(keyword)
-        );
-    });
+            const price = Number(product.price) || 0;
+            if (priceRange === "under50" && price >= 50000) return false;
+            if (
+                priceRange === "50to150" &&
+                (price < 50000 || price > 150000)
+            ) {
+                return false;
+            }
+            if (priceRange === "over150" && price <= 150000) return false;
+
+            const keyword = removeVietnameseTones(searchTerm);
+            if (!keyword) return true;
+
+            const productName = removeVietnameseTones(product.name);
+            const productDesc = removeVietnameseTones(product.description);
+
+            return (
+                productName.includes(keyword) || productDesc.includes(keyword)
+            );
+        })
+        .sort((a, b) => {
+            if (sortBy === "price-asc") return a.price - b.price;
+            if (sortBy === "price-desc") return b.price - a.price;
+            if (sortBy === "name-asc") return a.name.localeCompare(b.name, "vi");
+            return 0;
+        });
 
     const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-    const indexOfLastItem = currentPage * itemsPerPage;
+    const safePage = totalPages > 0 ? Math.min(currentPage, totalPages) : 1;
+    const indexOfLastItem = safePage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentProducts = filteredProducts.slice(
         indexOfFirstItem,
         indexOfLastItem
     );
 
-    const handleSearchChange = (event) => {
-        const value = event.target.value;
-        setSearchTerm(value);
-        setCurrentPage(1);
-        setOpenJumpIndex(null);
-        const nextParams = new URLSearchParams(searchParams);
+    const hasActiveFilter =
+        selectedCategory !== "all" ||
+        priceRange !== "all" ||
+        sortBy !== "default" ||
+        searchTerm.trim() !== "";
 
-        if (value.trim()) {
-            nextParams.set("search", value);
-        } else {
-            nextParams.delete("search");
-        }
-
-        setSearchParams(nextParams, { replace: true });
-    };
-
-    const handleCategorySelect = (categoryId) => {
-        const nextParams = new URLSearchParams(searchParams);
-
-        if (categoryId === "all") {
-            nextParams.delete("category");
-        } else {
-            nextParams.set("category", categoryId);
-        }
-
-        setSearchParams(nextParams, { replace: true });
+    const handleResetFilters = () => {
+        setSearchParams({}, { replace: true });
+        setPriceRange("all");
+        setSortBy("default");
         setCurrentPage(1);
         setOpenJumpIndex(null);
         setJumpInput("");
+    };
 
-        productSectionRef.current?.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-        });
+    const handleCategorySelect = (categoryId, shouldScroll = false) => {
+        setPriceRange("all");
+        setSortBy("default");
+        updateFilters(searchTerm, categoryId);
+
+        if (shouldScroll) {
+            productSectionRef.current?.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
+        }
+    };
+
+    const handleSearchChange = (event) => {
+        updateFilters(event.target.value, selectedCategory);
     };
 
     const handleSearchSubmit = (event) => {
@@ -149,20 +170,20 @@ export default function App() {
             return Array.from({ length: totalPages }, (_, index) => index + 1);
         }
 
-        if (currentPage <= 2) {
+        if (safePage <= 2) {
             return [1, 2, 3, "...", totalPages];
         }
 
-        if (currentPage >= totalPages - 1) {
+        if (safePage >= totalPages - 1) {
             return [1, "...", totalPages - 2, totalPages - 1, totalPages];
         }
 
         return [
             1,
             "...",
-            currentPage - 1,
-            currentPage,
-            currentPage + 1,
+            safePage - 1,
+            safePage,
+            safePage + 1,
             "...",
             totalPages,
         ];
@@ -191,6 +212,15 @@ export default function App() {
                 currentId === product.id ? null : currentId
             );
         }, 1200);
+    };
+
+    const activeCategoryObj = categoriesList.find(
+        (c) => c.id === selectedCategory
+    );
+
+    const getCategoryCount = (categoryId) => {
+        if (categoryId === "all") return productsData.length;
+        return productsData.filter((p) => p.category === categoryId).length;
     };
 
     return (
@@ -222,11 +252,7 @@ export default function App() {
                         to="/"
                         className="logo-box"
                         aria-label="VHD Store"
-                        onClick={() => {
-                            setSearchTerm("");
-                            setSearchParams({});
-                            setCurrentPage(1);
-                        }}
+                        onClick={handleResetFilters}
                     >
                         <div className="logo-badge">VHD</div>
                         <span className="logo-text">STORE</span>
@@ -240,7 +266,9 @@ export default function App() {
                             className="cat-select"
                             aria-label="Chọn danh mục"
                             value={selectedCategory}
-                            onChange={(event) => handleCategorySelect(event.target.value)}
+                            onChange={(e) =>
+                                handleCategorySelect(e.target.value, false)
+                            }
                         >
                             <option value="all">Tất cả danh mục</option>
                             <option value="paper">Giấy in</option>
@@ -299,7 +327,9 @@ export default function App() {
                                 selectedCategory === category.id ? " active" : ""
                             }`}
                             aria-pressed={selectedCategory === category.id}
-                            onClick={() => handleCategorySelect(category.id)}
+                            onClick={() =>
+                                handleCategorySelect(category.id, true)
+                            }
                         >
                             {category.icon} {category.name.toUpperCase()}
                         </button>
@@ -342,22 +372,36 @@ export default function App() {
                                 <li
                                     key={category.id}
                                     className={`category-item${
-                                        selectedCategory === category.id ? " active" : ""
+                                        selectedCategory === category.id
+                                            ? " active"
+                                            : ""
                                     }`}
                                     role="button"
                                     tabIndex={0}
-                                    aria-pressed={selectedCategory === category.id}
-                                    onClick={() => handleCategorySelect(category.id)}
+                                    aria-pressed={
+                                        selectedCategory === category.id
+                                    }
+                                    onClick={() =>
+                                        handleCategorySelect(category.id, false)
+                                    }
                                     onKeyDown={(event) => {
-                                        if (event.key === "Enter" || event.key === " ") {
+                                        if (
+                                            event.key === "Enter" ||
+                                            event.key === " "
+                                        ) {
                                             event.preventDefault();
-                                            handleCategorySelect(category.id);
+                                            handleCategorySelect(
+                                                category.id,
+                                                false
+                                            );
                                         }
                                     }}
+                                    style={{ cursor: "pointer" }}
                                 >
-    <span>
-        {category.icon} {category.name}
-    </span>
+                                    <span>
+                                        {category.icon} {category.name} (
+                                        {getCategoryCount(category.id)})
+                                    </span>
                                     <span className="arrow">›</span>
                                 </li>
                             ))}
@@ -368,19 +412,84 @@ export default function App() {
                         className="product-section"
                         ref={productSectionRef}
                     >
-                        <div className="section-header">
+                        <div className="section-header filter-toolbar">
                             <h2 className="section-title">
-                                DANH SÁCH SẢN PHẨM ({filteredProducts.length})
+                                {selectedCategory !== "all" && activeCategoryObj
+                                    ? `${activeCategoryObj.name.toUpperCase()} (${filteredProducts.length})`
+                                    : `DANH SÁCH SẢN PHẨM (${filteredProducts.length})`}
                             </h2>
+
+                            <div className="filter-controls">
+                                <select
+                                    className="filter-select"
+                                    aria-label="Lọc theo giá"
+                                    value={priceRange}
+                                    onChange={(e) => {
+                                        setPriceRange(e.target.value);
+                                        setCurrentPage(1);
+                                    }}
+                                >
+                                    <option value="all">Khoảng giá: Tất cả</option>
+                                    <option value="under50">Dưới 50.000đ</option>
+                                    <option value="50to150">
+                                        50.000đ - 150.000đ
+                                    </option>
+                                    <option value="over150">
+                                        Trên 150.000đ
+                                    </option>
+                                </select>
+
+                                <select
+                                    className="filter-select"
+                                    aria-label="Sắp xếp sản phẩm"
+                                    value={sortBy}
+                                    onChange={(e) => {
+                                        setSortBy(e.target.value);
+                                        setCurrentPage(1);
+                                    }}
+                                >
+                                    <option value="default">
+                                        Sắp xếp: Mặc định
+                                    </option>
+                                    <option value="price-asc">
+                                        Giá: Thấp đến cao
+                                    </option>
+                                    <option value="price-desc">
+                                        Giá: Cao đến thấp
+                                    </option>
+                                    <option value="name-asc">
+                                        Tên: A đến Z
+                                    </option>
+                                </select>
+
+                                {hasActiveFilter && (
+                                    <button
+                                        type="button"
+                                        className="btn-reset-filter"
+                                        onClick={handleResetFilters}
+                                    >
+                                        ✕ Xóa lọc
+                                    </button>
+                                )}
+                            </div>
                         </div>
 
                         {currentProducts.length === 0 ? (
                             <div className="no-results">
                                 <p>
-                                    {searchTerm.trim()
-                                        ? `Không tìm thấy sản phẩm nào phù hợp với từ khóa "${searchTerm}".`
-                                        : "Hiện chưa có sản phẩm."}
+                                    Không tìm thấy sản phẩm nào phù hợp với bộ
+                                    lọc hiện tại.
                                 </p>
+                                {hasActiveFilter && (
+                                    <button
+                                        type="button"
+                                        className="btn-reset-filter"
+                                        onClick={handleResetFilters}
+                                        style={{ marginTop: "12px" }}
+                                    >
+                                        Hiển thị tất cả sản phẩm
+                                    </button>
+                                )}
                             </div>
                         ) : (
                             <div className="product-grid">
@@ -463,9 +572,9 @@ export default function App() {
                                     type="button"
                                     className="page-btn"
                                     onClick={() =>
-                                        handlePageChange(currentPage - 1)
+                                        handlePageChange(safePage - 1)
                                     }
-                                    disabled={currentPage === 1}
+                                    disabled={safePage === 1}
                                 >
                                     {"<< Trước"}
                                 </button>
@@ -511,7 +620,7 @@ export default function App() {
                                                                 key={page}
                                                                 type="button"
                                                                 className={`jump-num ${
-                                                                    currentPage === page
+                                                                    safePage === page
                                                                         ? "active"
                                                                         : ""
                                                                 }`}
@@ -555,7 +664,7 @@ export default function App() {
                                             key={item}
                                             type="button"
                                             className={`page-btn ${
-                                                currentPage === item
+                                                safePage === item
                                                     ? "active"
                                                     : ""
                                             }`}
@@ -572,9 +681,9 @@ export default function App() {
                                     type="button"
                                     className="page-btn"
                                     onClick={() =>
-                                        handlePageChange(currentPage + 1)
+                                        handlePageChange(safePage + 1)
                                     }
-                                    disabled={currentPage === totalPages}
+                                    disabled={safePage === totalPages}
                                 >
                                     {"Sau >>"}
                                 </button>
@@ -583,6 +692,8 @@ export default function App() {
                     </section>
                 </div>
             </main>
+
+            <Footer />
         </div>
     );
 }
