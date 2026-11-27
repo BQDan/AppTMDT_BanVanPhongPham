@@ -3,6 +3,7 @@ import { useOrders } from "../hooks/useOrders";
 import { ORDER_STATUS, PAYMENTS } from '../lib/constants';
 import { formatVND } from '../lib/format';
 import '../css/cart.css';
+import '../css/account.css';
 
 export default function Orders()
 {
@@ -11,8 +12,8 @@ export default function Orders()
     {
         return (
             <section className='cart-empty'>
-                <h1>Bạn chưa có đon hàng nào</h1>
-                <Link to='/' className='btn btn-primary'>Hãy mua hàng ngay</Link>
+                <h1>Bạn chưa có đơn hàng nào</h1>
+                <Link to='/products' className='btn btn-primary'>Hãy mua hàng ngay</Link>
             </section>
         );
     }
@@ -31,12 +32,15 @@ export default function Orders()
                         ))}
                     </ul>
                     <footer>
-                        <span>{PAYMENTS[o.info.payment]} - Giao tới: {o.info.address}, {o.info.city}</span>
+                        <span>
+                            Người nhận: {o.info.fullName} - {o.info.phone}<br />
+                            {PAYMENTS[o.info.payment]} - Giao tới: {o.info.address}, {o.info.city}
+                        </span>
                         <strong>{formatVND(o.total)}</strong>
                     </footer>
                     {o.status === 'pending' && (
                         <button type='button' className='btn btn-ghost danger'
-                            onClick={() => {if(window.confirm('Huỷ đơn hàng này')) cancelOrder(o.id); }}>
+                            onClick={() => {if(window.confirm('Huỷ đơn hàng này?')) cancelOrder(o.id); }}>
                             Huỷ đơn
                         </button>
                     )}

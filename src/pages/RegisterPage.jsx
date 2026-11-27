@@ -1,9 +1,10 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 
 function RegisterPage() {
     const navigate = useNavigate();
+    const location = useLocation();
     const { register } = useAuth();
 
     const [errors, setErrors] = useState({});
@@ -36,7 +37,7 @@ function RegisterPage() {
             return;
         }
 
-        navigate("/");
+        navigate(location.state?.from || "/", { replace: true });
     };
 
     return (
@@ -115,7 +116,7 @@ function RegisterPage() {
 
                 <div className="auth-footer">
                     <span>Đã có tài khoản?</span>{" "}
-                    <Link to="/login">Đăng nhập</Link>
+                    <Link to="/login" state={location.state}>Đăng nhập</Link>
                 </div>
             </div>
         </div>

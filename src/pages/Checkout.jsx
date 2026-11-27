@@ -7,25 +7,30 @@ import { useOrders } from "../hooks/useOrders";
 import { PAYMENTS, shippingFor } from "../lib/constants";
 import { formatVND } from "../lib/format";
 import "../css/cart.css";
+import '../css/account.css';
 
 export default function Checkout() {
     const { user } = useAuth();
-    const { lines, subtotal, clearCart } = useCart();
-    const { placeOrder } = useOrders();
+    const { lines, subtotal } = useCart();
+    const { placeOrder, lastShipping } = useOrders();
     const navigate = useNavigate();
 
     const [form, setForm] = useState({
         fullName: user?.name || "",
-        phone: user?.phone || "",
+        phone: user?.phone || lastShipping?.phone || "",
         email: user?.email || "",
-        address: "",
-        city: "",
+        address: lastShipping?.address || "",
+        city: lastShipping?.city || "",
         note: "",
         payment: "cod",
     });
     const [errors, setErrors] = useState({});
+    const [submitting, setSubmitting] = useState(false);
+    // vì sau khi đặt xong thì giỏ sẽ bị xoá
+    // ngăn tự chuyển trang về cart trước khi qua order-done
+    const [placed, setPlaced] = useState(false);
 
-    if (!lines.length) {
+    if (!lines.length && !placed) {
         return <Navigate to="/cart" replace />;
     }
 
@@ -48,21 +53,22 @@ export default function Checkout() {
 
     const onSubmit = (event) => {
         event.preventDefault();
+        if(submitting || placed) return;
+        setSubmitting(true);
 
-        const response = placeOrder(
-            form,
-            lines.map((line) => ({
-                id: line.id,
-                qty: line.qty,
-            }))
-        );
+        const response = placeOrder(form);
 
         if (!response.ok) {
+            setSubmitting(false);
             setErrors(response.errors);
+            requestAnimationFrame(() => 
+                document.querySelector('.alert-error, .field-error')
+                    ?.scrollIntoView({ block: 'center', behavior:'smooth' })
+            );
             return;
         }
 
-        clearCart();
+        setPlaced(true);
         navigate(`/order-done/${response.order.id}`, { replace: true });
     };
 
@@ -76,6 +82,11 @@ export default function Checkout() {
     return (
         <section className="cart-page">
             <h1>Thông tin đặt hàng</h1>
+
+            <p className="account-note">
+                Đặt hàng bằng tài khoản <b>{user.name}</b> ({user.email}). Đơn hàng sẽ có trong mục{' '}
+                <Link to='/account/orders'>Đơn hàng của tôi</Link>
+            </p>
 
             {errors._ && (
                 <div className="alert alert-error" role="alert">
@@ -234,8 +245,9 @@ export default function Checkout() {
                     <button
                         type="submit"
                         className="btn btn-primary btn-block"
+                        disabled={submitting}
                     >
-                        Xác nhận đặt hàng
+                        {submitting ? 'Đang xử lý...' : 'Xác nhận đặt hàng'}
                     </button>
 
                     <Link to="/cart" className="btn btn-ghost btn-block">

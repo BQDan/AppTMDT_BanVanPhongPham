@@ -1,13 +1,33 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { KEYS, readJSON } from '../lib/storage';
-import { PAYMENTS, shippingFor } from '../lib/constants';
+import { ORDER_STATUS, PAYMENTS, shippingFor } from '../lib/constants';
 import { cleanText, isValidName, isValidEmail, isValidPhone, isValidAddress, isNotEmpty} from '../lib/valid';
 import { getProduct } from '../data/products';
 import { selectCurrentUser } from './authSlice';
+import { clearCart, selectCartItems } from './cartSlice';
+
+const isValidOrder = (o) => {
+    return Boolean(o && typeof o === 'object' && typeof o.id === 'string' && o.id &&
+        typeof o.userId === 'string' && o.userId && o.info && typeof o.info === 'object' &&
+        Array.isArray(o.items) && o.items.length > 0 &&
+        o.items.every((i) => i && i.id && typeof i.name === 'string' &&
+            Number.isFinite(Number(i.price)) && Number(i.price) >= 0 &&
+            Number.isInteger(Number(i.qty)) && Number(i.qty) > 0) &&
+        Number.isFinite(Number(o.total)) && Number(o.createdAt) > 0);
+};
+
+function loadOrders() {
+    const raw = readJSON(KEYS.orders, []);
+    const all = (Array.isArray(raw) ? raw : []).filter(isValidOrder).map((o) => ({
+        ...o,
+        status: ORDER_STATUS[o.status] ? o.status : 'pending'
+    }));
+    return {all};
+}
 
 const ordersSlice = createSlice({
     name: 'orders',
-    initialState: () => ({ all: readJSON(KEYS.orders, []) }),
+    initialState: loadOrders,
     reducers: {
         orderAdded(state, { payload }) { state.all.push(payload); },
         orderCancelled(state, { payload: id }) {
@@ -20,6 +40,11 @@ const ordersSlice = createSlice({
 export const { orderAdded, orderCancelled } = ordersSlice.actions;
 export default ordersSlice.reducer;
 
+const normalizePhone = (p) => {
+    const phone = cleanText(p, 15).split(' ').join('');
+    return phone.startsWith('+84') ? '0' + phone.slice(3) : phone;
+}
+
 function validateInfo(info) {
     const e = {};
     if (!isValidName(info.fullName)) e.fullName = 'Họ tên từ 2 đến 60 ký tự.';
@@ -31,13 +56,25 @@ function validateInfo(info) {
     return e;
 }
 
-export const placeOrder = (rawInfo, cartItems) => (dispatch, getState) => {
-    const user = selectCurrentUser(getState());
-    if (!user) return { ok: false, errors: { _: 'Bạn cần đăng nhập để đặt hàng.' } };
+const newOrderId = (all) => {
+    let id;
+    do {
+        id='VHD' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2, 4).toUpperCase();
+    } while (all.some((o) => o.id === id));
+    return id;
+};
+
+export const placeOrder = (rawInfo) => (dispatch, getState) => {
+    const state = getState();
+    const user = selectCurrentUser(state);
+    if (!user) return { ok: false, errors: { _: 'Phiên đăng nhập hết hạn, vui lòng đăng nhập lại để đặt hàng.' } };
+
+    const cart = selectCartItems(state);
+    if(!cart.length) return { ok: false, errors:{ _: 'Giỏ hàng đang trống.'}};
 
     const info = {
         fullName: cleanText(rawInfo.fullName, 60),
-        phone: cleanText(rawInfo.phone, 15).split(' ').join(''),
+        phone: normalizePhone(rawInfo.phone, 15),
         email: cleanText(rawInfo.email, 120).toLowerCase(),
         address: cleanText(rawInfo.address, 200),
         city: cleanText(rawInfo.city, 60),
@@ -45,23 +82,24 @@ export const placeOrder = (rawInfo, cartItems) => (dispatch, getState) => {
         payment: rawInfo.payment,
     };
     const errors = validateInfo(info);
-    if (Object.keys(errors).length) return { ok: false, errors };
 
     const items = [];
-    for (const ci of cartItems) {
+    const problems = [];
+    for (const ci of cart) {
         const p = getProduct(ci.id);
-        if (!p || ci.qty < 1 || ci.qty > p.stock) {
-            return { ok: false, errors: { _: 'Giỏ hàng có sản phẩm không hợp lệ hoặc vượt tồn kho.' } };
-        }
-        items.push({ id: p.id, name: p.name, price: p.price, qty: ci.qty });
+        if (!p || p.stock < 1) problems.push(`"${p ? p.name : ci.id}" hiện không còn hàng.`);
+        else if (ci.qty < 1 || ci.qty > p.stock) problems.push(`"${p.name}" chỉ còn ${p.stock} sản phẩm.`);
+        else items.push({ id: p.id, name: p.name, price: p.price, qty: ci.qty, image: p.image });
     }
-    if (!items.length) return { ok: false, errors: { _: 'Giỏ hàng đang trống.' } };
+    if(problems.length) errors._ = problems.join(' ');
+    if (Object.keys(errors).length) return { ok: false, errors };
 
     const subtotal = items.reduce((s, i) => s + i.price * i.qty, 0);
     const shipping = shippingFor(subtotal);
     const order = {
-        id: 'VHD' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2, 4).toUpperCase(),
+        id: newOrderId(state.orders.all),
         userId: user.id,
+        customer: { id: user.id, name: user.name, email: user.email, phone: user.phone || '' },
         info,
         items,
         subtotal,
@@ -71,6 +109,7 @@ export const placeOrder = (rawInfo, cartItems) => (dispatch, getState) => {
         createdAt: Date.now(),
     };
     dispatch(orderAdded(order));
+    dispatch(clearCart());
     return { ok: true, order };
 };
 

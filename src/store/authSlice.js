@@ -51,6 +51,7 @@ export const registerUser = (form) => (dispatch, getState) => {
         id: 'u_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
         name,
         email,
+        phone: cleanText(form.phone, 15).split(' ').join(''),
         password,
         role: ROLES.CUSTOMER,
         createdAt: Date.now()

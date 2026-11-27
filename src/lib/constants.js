@@ -16,3 +16,11 @@ export const shippingFor = (subtotal) => (
     subtotal === 0 ||
     subtotal >= FREE_SHIP_FROM ? 0 : SHIP_FEE
 );
+
+export const CATEGORY_NAMES = {
+    paper: 'Giấy in - Giấy photo',
+    notebook: 'Tập vở - sổ tay',
+    pen: 'Dụng cụ viết',
+    file: 'File & lưu trữ',
+    device: 'Thiết bị văn phòng'
+};
